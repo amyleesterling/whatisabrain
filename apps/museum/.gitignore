@@ -1,0 +1,37 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+scripts/__pycache__/
+.functional-cache/
+
+# Rendered activity loop videos — large (100MB+), generated locally via
+# `npm run render-video`. Kept out of the repo so the Pages deploy stays light.
+# Pattern covers the default name + any renamed exports (e.g. for Drive).
+public/*activity-loop*.mp4
+public/*.mp4
+
+# Intermediate caches written by older runs of scripts/extract-functional-cells.py
+# (the current script writes to .functional-cache/ instead).
+public/data/_nwb_cache/
+public/data/_resolved_roots.json

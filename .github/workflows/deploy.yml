@@ -1,0 +1,68 @@
+name: Deploy whatisabrain.com
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two deploys at once; let the latest win.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build Inner Cosmos (/explore)
+        working-directory: apps/explore
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build Museum (/museum)
+        working-directory: apps/museum
+        run: |
+          npm ci
+          npm run build
+
+      - name: Assemble site
+        run: |
+          set -e
+          rm -rf _site
+          mkdir -p _site/explore _site/museum
+          # Hub (root static files)
+          cp index.html brain-favicon.png og-image.jpg robots.txt sitemap.xml CNAME 404.html _site/
+          cp google*.html _site/ 2>/dev/null || true
+          cp -r icons meshes _site/
+          # Apps (built output)
+          cp -r apps/explore/dist/. _site/explore/
+          cp -r apps/museum/dist/. _site/museum/
+          # Per-app SPA fallback (in case Pages serves a subdirectory 404)
+          cp _site/explore/index.html _site/explore/404.html
+          cp _site/museum/index.html _site/museum/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment

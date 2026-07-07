@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Inner Cosmos</title>
+    <script>
+      // SPA fallback for GitHub Pages. Direct hits on client-side routes like
+      // /explore/kindergarten/1 or /museum/attract land here (no matching
+      // file). For the two app prefixes we rewrite the path into ?/… form and
+      // bounce to the app's index.html, whose restore snippet puts it back so
+      // React Router renders the right route. Anything else goes home.
+      (function () {
+        var l = window.location;
+        var seg1 = l.pathname.split('/')[1];
+        if (seg1 === 'explore' || seg1 === 'museum') {
+          var keep = 1;
+          l.replace(
+            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+            l.pathname.split('/').slice(0, 1 + keep).join('/') + '/?/' +
+            l.pathname.slice(1).split('/').slice(keep).join('/').replace(/&/g, '~and~') +
+            (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+            l.hash
+          );
+        } else {
+          l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/');
+        }
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
