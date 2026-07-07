@@ -3,14 +3,87 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Inner Cosmos — explore the hidden world inside a brain</title>
-  <meta name="description" content="A collection of experiences built from real connectomics data. Zoom from a whole brain to a single synapse, meet real neurons, or watch the cosmos unfold on a museum wall." />
-  <link rel="icon" href="brain-favicon.png" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Inner Cosmos" />
-  <meta property="og:description" content="Explore the hidden world inside a brain. Real connectomics data, real neurons." />
+  <title>Inner Cosmos — Explore a Real Brain in 3D | Free Neuroscience Resource for Classrooms</title>
+  <meta name="description" content="Zoom from a whole brain down to a single neuron using real connectomics data. A free, interactive neuroscience resource for teachers, students, and anyone curious about how the brain works. No login, works in any browser." />
+  <meta name="keywords" content="neuroscience for kids, brain for students, how the brain works, 3D neuron model, interactive brain, explore the brain, real neurons, connectome, connectomics, MICrONS, FlyWire, synapse, cortex, brain anatomy, neuron structure, STEM classroom resource, free neuroscience lesson, brain science for classrooms, what is a brain" />
+  <meta name="author" content="Amy Sterling" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#04060c" />
+  <link rel="canonical" href="https://whatisabrain.com/" />
+  <link rel="icon" href="brain-favicon.png" />
+  <link rel="apple-touch-icon" href="brain-favicon.png" />
+
+  <!-- Open Graph (link previews on Facebook, Slack, iMessage, LMS, etc.) -->
+  <meta property="og:site_name" content="Inner Cosmos" />
+  <meta property="og:title" content="Inner Cosmos — Explore a Real Brain in 3D" />
+  <meta property="og:description" content="A free, interactive neuroscience resource. Zoom from a whole brain down to a single neuron using real connectomics data. Built for classrooms and the curious." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://whatisabrain.com/" />
+  <meta property="og:image" content="https://whatisabrain.com/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="A real pyramidal neuron reconstructed in 3D from MICrONS connectomics data" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter / X card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Inner Cosmos — Explore a Real Brain in 3D" />
+  <meta name="twitter:description" content="A free, interactive neuroscience resource for classrooms and the curious. Zoom from a whole brain down to a single neuron." />
+  <meta name="twitter:image" content="https://whatisabrain.com/og-image.jpg" />
+  <meta name="twitter:creator" content="@amyneurons" />
+
+  <!-- Structured data: helps Google surface this as a free educational learning resource -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://whatisabrain.com/#website",
+        "url": "https://whatisabrain.com/",
+        "name": "Inner Cosmos",
+        "description": "Explore a real brain in 3D — a free, interactive neuroscience resource.",
+        "inLanguage": "en"
+      },
+      {
+        "@type": ["LearningResource", "WebApplication"],
+        "@id": "https://whatisabrain.com/#resource",
+        "name": "Inner Cosmos — Explore a Real Brain in 3D",
+        "url": "https://whatisabrain.com/",
+        "description": "Zoom from a whole brain down to a single neuron using real connectomics data. A free, interactive neuroscience resource for teachers, students, and anyone curious about how the brain works.",
+        "image": "https://whatisabrain.com/og-image.jpg",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "learningResourceType": ["Interactive resource", "Visualization", "Simulation"],
+        "educationalUse": ["Instruction", "Self-study", "Demonstration"],
+        "teaches": ["Neuroscience", "Brain anatomy", "Neurons and synapses", "Connectomics", "Cell types in the cortex"],
+        "about": [
+          { "@type": "Thing", "name": "Brain" },
+          { "@type": "Thing", "name": "Neuroscience" },
+          { "@type": "Thing", "name": "Neuron" },
+          { "@type": "Thing", "name": "Connectomics" }
+        ],
+        "typicalAgeRange": "8-",
+        "audience": [
+          { "@type": "EducationalAudience", "educationalRole": "teacher" },
+          { "@type": "EducationalAudience", "educationalRole": "student" },
+          { "@type": "Audience", "audienceType": "anyone curious about the brain" }
+        ],
+        "browserRequirements": "Requires a modern web browser with WebGL. No login required.",
+        "creator": { "@id": "https://whatisabrain.com/#amy" },
+        "publisher": { "@id": "https://whatisabrain.com/#amy" }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://whatisabrain.com/#amy",
+        "name": "Amy Sterling",
+        "url": "https://whatisabrain.com/",
+        "sameAs": ["https://twitter.com/amyneurons", "https://x.com/amyneurons"]
+      }
+    ]
+  }
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -137,6 +210,10 @@
     .btn-primary:hover svg { transform: translateX(3px); }
     .btn-ghost { font-size: 0.9rem; color: rgba(255,255,255,0.55); padding: 0.5rem 0.75rem; transition: color .3s; }
     .btn-ghost:hover { color: rgba(255,255,255,0.9); }
+    .hero-tagline {
+      margin-top: 2.25rem; font-size: 0.8rem; letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.42); text-transform: uppercase; font-weight: 500;
+    }
 
     /* ---- Card grid ---- */
     .experiences {
@@ -303,6 +380,8 @@
         </a>
         <a class="btn-ghost" href="#ways">or browse all experiences &#8595;</a>
       </div>
+
+      <p class="hero-tagline reveal d5">A free educational resource for classrooms &amp; everyone curious about the brain.</p>
     </section>
 
     <section class="experiences" id="ways">
@@ -327,7 +406,7 @@
             </div>
           </div>
           <div class="feature-media">
-            <img src="icons/inner-cosmos.webp" alt="" onerror="this.style.display='none'" />
+            <img src="icons/inner-cosmos.webp" alt="A real pyramidal neuron reconstructed in 3D from MICrONS brain data" onerror="this.style.display='none'" />
           </div>
         </a>
 
@@ -335,7 +414,7 @@
         <a class="card glass reveal d2" href="https://amyleesterling.github.io/inner_cosmos/kindergarten/1"
            style="--tint: rgba(255,217,168,0.18); --tint-solid: var(--glow-warm);">
           <div>
-            <div class="card-icon"><img src="icons/kids.webp" alt="" onerror="this.style.display='none'" /></div>
+            <div class="card-icon"><img src="icons/kids.webp" alt="A 3D model of the human brain for young learners" onerror="this.style.display='none'" /></div>
             <div class="kicker"><span class="dot"></span>For young explorers</div>
             <h3>Neuroscience for Kids</h3>
             <p>A gentle, illustrated tour of the brain — the same real neurons, told simply, one wonder at a time.</p>
@@ -351,7 +430,7 @@
              style="--tint: rgba(126,224,255,0.18); --tint-solid: var(--glow-cyan);">
           <a class="card-stretch" href="https://amyleesterling.github.io/science-experiment/attract" aria-label="The Cosmos, on a Wall — watch the attract loop"></a>
           <div>
-            <div class="card-icon"><img src="icons/wall.webp" alt="" onerror="this.style.display='none'" /></div>
+            <div class="card-icon"><img src="icons/wall.webp" alt="Ten real cortical neurons reconstructed from a cubic millimeter of brain" onerror="this.style.display='none'" /></div>
             <div class="kicker"><span class="dot"></span>Museums &amp; art installations</div>
             <h3>The Cosmos, on a Wall</h3>
             <p>A non-interactive attract loop built for large-format screens (up to 3628&#215;1600 and beyond). Sit back and let the guided zoom play, endlessly. Available to license for museums and installations.</p>
@@ -370,7 +449,7 @@
         <a class="card small glass reveal d1" href="https://amyleesterling.github.io/science-experiment/scale-test"
            style="--tint: rgba(255,126,224,0.16); --tint-solid: var(--glow-magenta);">
           <div>
-            <div class="card-icon"><img src="icons/fun-brain-stats.png" alt="" onerror="this.style.display='none'" /></div>
+            <div class="card-icon"><img src="icons/fun-brain-stats.png" alt="Brain-by-the-numbers: how many neurons, synapses, and how far the wiring stretches" onerror="this.style.display='none'" /></div>
             <div class="kicker"><span class="dot"></span>By the numbers</div>
             <h3>Fun Brain Stats</h3>
             <p>How big is a neuron, really? How far would your brain's wiring stretch if you laid it end to end? The mind-bending numbers, made tangible.</p>
@@ -383,7 +462,7 @@
         <a class="card small glass reveal d2" href="https://amyleesterling.github.io/science-experiment/citations"
            style="--tint: rgba(126,224,255,0.16); --tint-solid: var(--glow-cyan);">
           <div>
-            <div class="card-icon"><img src="icons/citations.png" alt="" onerror="this.style.display='none'" /></div>
+            <div class="card-icon"><img src="icons/citations.png" alt="Sources, datasets, and citations behind the numbers" onerror="this.style.display='none'" /></div>
             <div class="kicker"><span class="dot"></span>Reference</div>
             <h3>Sources &amp; Citations</h3>
             <p>Where every number comes from — datasets, papers, and the wiring-length estimate, shown transparently.</p>
@@ -401,7 +480,9 @@
       <span class="sep">&#183;</span>
       <a href="https://www.flywire.ai/" target="_blank" rel="noreferrer">FlyWire</a>
       <span class="sep">&#183;</span>
-      Built with neuroglancer
+      Built with neuroglancer by Amy Sterling
+      <a href="https://x.com/amyneurons" target="_blank" rel="noreferrer">@amyneurons</a>
+      and Claude
     </footer>
   </main>
 
