@@ -381,7 +381,7 @@ export default function ScaleTest() {
               />
             </div>
             <p className="mt-1 text-center text-[11px] uppercase tracking-[0.26em] text-white/40">
-              Drag to rotate — a real human-brain mesh
+              Drag to rotate. A real human brain mesh
             </p>
           </div>
 
