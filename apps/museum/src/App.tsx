@@ -10,6 +10,8 @@ import Kindergarten from "./pages/Kindergarten";
 import Wonder from "./pages/Wonder";
 import ScaleTest from "./pages/ScaleTest";
 import FlyStats from "./pages/FlyStats";
+import Quiz from "./pages/Quiz";
+import Teach from "./pages/Teach";
 import ScaleWall from "./pages/ScaleWall";
 import Citations from "./pages/Citations";
 import WallLaunch from "./pages/WallLaunch";
@@ -46,6 +48,9 @@ export default function App() {
         {/* Fly brain: the FlyWire whole-brain connectome, as a companion to
             the human "by the numbers" page. */}
         <Route path="/fly" element={<FlyStats />} />
+        {/* Guess-the-number quiz + a guide for teachers. */}
+        <Route path="/quiz" element={<Quiz />} />
+        <Route path="/teach" element={<Teach />} />
         {/* Simplified stats as they'd sit inside the wall's card 5. */}
         <Route path="/scale-wall" element={<ScaleWall />} />
         {/* Sources, calculations & credits (esp. the wiring estimate). */}

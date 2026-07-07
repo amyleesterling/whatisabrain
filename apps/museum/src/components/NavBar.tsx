@@ -20,6 +20,8 @@ export default function NavBar() {
     pathname === "/wall" ||
     pathname === "/stats" ||
     pathname === "/fly" ||
+    pathname === "/quiz" ||
+    pathname === "/teach" ||
     pathname === "/scale-test" ||
     pathname === "/scale-wall" ||
     pathname === "/citations"

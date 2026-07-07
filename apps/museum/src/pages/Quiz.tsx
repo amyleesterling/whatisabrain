@@ -1,0 +1,235 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import HubLogo from "../components/HubLogo";
+
+const HUMAN = "#b78bff";
+const FLY = "#ffc861";
+const RIGHT = "#7be0a4";
+const WRONG = "#ff9a9a";
+
+type Q = {
+  question: string;
+  options: string[];
+  answer: number;
+  payoff: string;
+  link?: { to: string; label: string };
+};
+
+// Guess-the-number quiz. Every answer's payoff is a real figure from the stats
+// and fly pages, so the quiz doubles as a tour of them.
+const QUESTIONS: Q[] = [
+  {
+    question: "How many neurons are in a human brain?",
+    options: ["86 million", "86 billion", "86 trillion"],
+    answer: 1,
+    payoff: "About 86 billion, more than ten times every human alive on Earth.",
+  },
+  {
+    question: "Your brain is about 2% of your body weight. How much of your energy does it burn?",
+    options: ["About 2%", "About 20%", "About 50%"],
+    answer: 1,
+    payoff: "About 20%. It's a tiny organ with an enormous appetite. Thinking is expensive.",
+  },
+  {
+    question: "By dry weight, what is your brain mostly made of?",
+    options: ["Water", "Fat", "Protein"],
+    answer: 1,
+    payoff: "Roughly 60% fat. You are, structurally, thinking with butter, and that fat lets signals race at 270 mph.",
+  },
+  {
+    question: "Scientists have mapped every neuron and connection in the brain of which animal?",
+    options: ["A mouse", "A fruit fly", "A human"],
+    answer: 1,
+    payoff: "A fruit fly: 139,255 neurons, every wire traced (FlyWire, 2024). The mouse and human are still uncharted.",
+    link: { to: "/fly", label: "See the fly brain" },
+  },
+  {
+    question: "Laid end to end, how long is all the wiring in one human brain?",
+    options: ["~2,000 km", "~200,000 km", "~2 million km"],
+    answer: 2,
+    payoff: "About 2 million km, enough living thread to wrap around the Earth roughly 50 times.",
+    link: { to: "/stats", label: "See the numbers" },
+  },
+];
+
+function scoreTitle(score: number, total: number): string {
+  const pct = score / total;
+  if (pct === 1) return "Big brain energy";
+  if (pct >= 0.6) return "Nicely wired";
+  if (pct >= 0.3) return "Warming up those synapses";
+  return "Your brain just learned something";
+}
+
+export default function Quiz() {
+  const [i, setI] = useState(0);
+  const [picked, setPicked] = useState<number | null>(null);
+  const [score, setScore] = useState(0);
+  const [done, setDone] = useState(false);
+
+  const q = QUESTIONS[i];
+  const revealed = picked !== null;
+
+  function choose(idx: number) {
+    if (revealed) return;
+    setPicked(idx);
+    if (idx === q.answer) setScore((s) => s + 1);
+  }
+
+  function next() {
+    if (i + 1 >= QUESTIONS.length) {
+      setDone(true);
+    } else {
+      setI((n) => n + 1);
+      setPicked(null);
+    }
+  }
+
+  function restart() {
+    setI(0);
+    setPicked(null);
+    setScore(0);
+    setDone(false);
+  }
+
+  return (
+    <div
+      className="min-h-screen w-full text-white"
+      style={{ background: "radial-gradient(ellipse at 50% 0%, #101a2e 0%, #04060c 62%)" }}
+    >
+      <div className="sticky top-0 z-40 border-b border-white/8 bg-[#04060c]/72 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-3xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+          <HubLogo className="shrink-0" />
+          <Link
+            to="/stats"
+            className="rounded-full px-3 py-1.5 text-sm text-white/55 transition hover:bg-white/5 hover:text-white/90"
+          >
+            Brain stats →
+          </Link>
+        </div>
+      </div>
+
+      <div className="mx-auto flex min-h-[calc(100vh-56px)] max-w-3xl flex-col justify-center px-6 py-12">
+        {!done ? (
+          <>
+            {/* Progress */}
+            <div className="mb-8 flex items-center gap-2">
+              {QUESTIONS.map((_, n) => (
+                <span
+                  key={n}
+                  className="h-1.5 flex-1 rounded-full transition-all duration-500"
+                  style={{ background: n < i ? HUMAN : n === i ? "rgba(183,139,255,0.5)" : "rgba(255,255,255,0.1)" }}
+                />
+              ))}
+            </div>
+
+            <p className="mb-2 text-[11px] uppercase tracking-[0.32em] text-white/45">
+              Question {i + 1} of {QUESTIONS.length}
+            </p>
+            <h1 className="font-display text-[clamp(1.7rem,3.6vw,2.6rem)] font-light leading-tight">
+              {q.question}
+            </h1>
+
+            <div className="mt-8 grid gap-3">
+              {q.options.map((opt, idx) => {
+                const isAnswer = idx === q.answer;
+                const isPicked = idx === picked;
+                let border = "rgba(255,255,255,0.12)";
+                let bg = "rgba(255,255,255,0.03)";
+                let ring = "";
+                if (revealed && isAnswer) {
+                  border = RIGHT;
+                  bg = "rgba(123,224,164,0.1)";
+                } else if (revealed && isPicked && !isAnswer) {
+                  border = WRONG;
+                  bg = "rgba(255,154,154,0.08)";
+                }
+                if (!revealed) ring = "hover:border-white/30 hover:bg-white/[0.06]";
+                return (
+                  <button
+                    key={opt}
+                    onClick={() => choose(idx)}
+                    disabled={revealed}
+                    className={`flex items-center justify-between rounded-2xl border px-5 py-4 text-left text-lg transition ${ring} ${
+                      revealed ? "cursor-default" : "cursor-pointer"
+                    }`}
+                    style={{ borderColor: border, background: bg }}
+                  >
+                    <span className={revealed && !isAnswer && !isPicked ? "text-white/45" : "text-white"}>{opt}</span>
+                    {revealed && isAnswer && <span style={{ color: RIGHT }}>✓</span>}
+                    {revealed && isPicked && !isAnswer && <span style={{ color: WRONG }}>✕</span>}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Reveal payoff */}
+            {revealed && (
+              <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+                <p className="text-[15px] leading-relaxed text-white/80">
+                  {picked === q.answer ? (
+                    <span style={{ color: RIGHT }} className="font-medium">Correct. </span>
+                  ) : (
+                    <span style={{ color: WRONG }} className="font-medium">Not quite. </span>
+                  )}
+                  {q.payoff}
+                </p>
+                {q.link && (
+                  <Link
+                    to={q.link.to}
+                    className="mt-3 inline-block text-sm underline decoration-white/25 transition hover:text-white"
+                    style={{ color: q.link.to === "/fly" ? FLY : HUMAN }}
+                  >
+                    {q.link.label} →
+                  </Link>
+                )}
+                <div className="mt-5">
+                  <button
+                    onClick={next}
+                    className="rounded-full px-6 py-2.5 text-sm font-medium transition"
+                    style={{ background: "rgba(183,139,255,0.16)", border: "1px solid rgba(183,139,255,0.4)", color: HUMAN }}
+                  >
+                    {i + 1 >= QUESTIONS.length ? "See your score" : "Next question →"}
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          /* Score screen */
+          <div className="text-center">
+            <p className="mb-3 text-[11px] uppercase tracking-[0.32em] text-white/45">Your score</p>
+            <p className="font-display font-light leading-none" style={{ color: HUMAN, fontSize: "clamp(3.5rem,12vw,7rem)" }}>
+              {score}<span className="text-white/30">/{QUESTIONS.length}</span>
+            </p>
+            <h1 className="mt-4 font-display text-[clamp(1.8rem,4vw,3rem)] font-light">{scoreTitle(score, QUESTIONS.length)}</h1>
+            <p className="mx-auto mt-4 max-w-md leading-relaxed text-white/65">
+              Every answer here is a real number from the brain. There is a lot more where these came from.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <button
+                onClick={restart}
+                className="rounded-full border border-white/15 bg-white/8 px-5 py-2.5 text-sm font-medium text-white/88 transition hover:bg-white/12"
+              >
+                Play again
+              </button>
+              <Link
+                to="/stats"
+                className="rounded-full px-5 py-2.5 text-sm font-medium transition"
+                style={{ background: "rgba(183,139,255,0.16)", border: "1px solid rgba(183,139,255,0.4)", color: HUMAN }}
+              >
+                Brains by the numbers →
+              </Link>
+              <Link
+                to="/fly"
+                className="rounded-full px-5 py-2.5 text-sm font-medium transition"
+                style={{ background: "rgba(255,200,97,0.14)", border: "1px solid rgba(255,200,97,0.35)", color: FLY }}
+              >
+                The fly we mapped →
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

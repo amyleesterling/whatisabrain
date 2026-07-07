@@ -124,8 +124,11 @@
       position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background: radial-gradient(ellipse at center, rgba(28,39,66,0.55) 0%, rgba(4,6,12,1) 70%);
     }
-    /* Three.js neuron field lives here — behind everything, non-interactive. */
-    #cosmos { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+    /* Three.js neuron field lives here — behind everything, non-interactive.
+       Starts invisible and fades in once the first real neurons render, so the
+       page paints instantly on the plain gradient (the "lite" view) and then
+       transitions up to the full 3D field. */
+    #cosmos { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity 1.4s ease; }
     /* Soft central darkening so the headline stays legible over any cell that
        drifts near the middle. */
     .center-veil {
@@ -480,7 +483,46 @@
           </div>
         </a>
 
-        <a class="card small glass reveal d2" href="/museum/citations"
+        <a class="card small glass reveal d2" href="/museum/fly"
+           style="--tint: rgba(255,200,97,0.18); --tint-solid: #ffc861;">
+          <div>
+            <div class="card-icon"><img src="icons/fly.webp" alt="The FlyWire reconstruction of an adult fruit fly brain" onerror="this.style.display='none'" /></div>
+            <div class="kicker"><span class="dot"></span>The whole connectome</div>
+            <h3>The Fly Brain</h3>
+            <p>The one brain we have mapped completely: every neuron, every connection in a fruit fly. See the real FlyWire reconstruction and why it is a milestone.</p>
+          </div>
+          <div class="go">See the fly
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </a>
+
+        <a class="card small glass reveal d3" href="/museum/quiz"
+           style="--tint: rgba(123,224,164,0.18); --tint-solid: #7be0a4;">
+          <div>
+            <div class="card-icon"><img src="icons/quiz.webp" alt="" onerror="this.style.display='none'" /></div>
+            <div class="kicker"><span class="dot"></span>Test yourself</div>
+            <h3>Guess the Number</h3>
+            <p>Five quick questions about your own brain. How many neurons? How much energy? Every answer reveals a fact that will stick with you.</p>
+          </div>
+          <div class="go">Take the quiz
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </a>
+
+        <a class="card small glass reveal d4" href="/museum/teach"
+           style="--tint: rgba(126,224,255,0.16); --tint-solid: var(--glow-cyan);">
+          <div>
+            <div class="card-icon"><img src="icons/teach.webp" alt="" onerror="this.style.display='none'" /></div>
+            <div class="kicker"><span class="dot"></span>For classrooms</div>
+            <h3>For Teachers</h3>
+            <p>Ways to use this in a lesson, discussion questions, and a printable guide. Free, no login, works on any device in the room.</p>
+          </div>
+          <div class="go">Open the guide
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </a>
+
+        <a class="card small glass reveal d5" href="/museum/citations"
            style="--tint: rgba(126,224,255,0.16); --tint-solid: var(--glow-cyan);">
           <div>
             <div class="card-icon"><img src="icons/citations.webp" alt="A cortical neuron reconstructed from MICrONS" onerror="this.style.display='none'" /></div>
@@ -525,10 +567,18 @@
     import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      // "Lite-first" on phones and low-power devices: fewer instances, lower
+      // pixel ratio, and a deferred start so the plain gradient paints first.
+      const LITE = window.matchMedia("(max-width: 767px)").matches
+        || window.matchMedia("(pointer: coarse)").matches
+        || (navigator.hardwareConcurrency || 8) <= 4;
+
+      function startCosmos() {
       const container = document.getElementById("cosmos");
+      let faded = false;
 
       const PALETTE = ["#39c6ff", "#a163ff", "#ff5cc0", "#ffb24d", "#3fe3b0", "#4aa6ff"].map(c => new THREE.Color(c));
-      const INSTANCES_PER_CELL = 4;
+      const INSTANCES_PER_CELL = LITE ? 2 : 4;
 
       const scene = new THREE.Scene();
       scene.fog = new THREE.FogExp2(0x04060c, 0.045);
@@ -546,7 +596,7 @@
       updateCameraForAspect();
 
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "low-power", preserveDrawingBuffer: true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, LITE ? 1.5 : 2));
       renderer.setSize(container.clientWidth, container.clientHeight);
       renderer.setClearColor(0x000000, 0);
       container.appendChild(renderer.domElement);
@@ -614,6 +664,8 @@
                 placeInstance(group);
                 scene.add(group);
               }
+              // First real neurons are in — fade the whole field up over the gradient.
+              if (!faded) { faded = true; requestAnimationFrame(() => { container.style.opacity = "1"; }); }
             }, undefined, (err) => console.error(`failed to load ${cell.segId}`, err));
           });
         })
@@ -641,6 +693,16 @@
         requestAnimationFrame(animate);
       }
       animate();
+      } // end startCosmos
+
+      // Defer the heavy 3D until after first paint. requestIdleCallback keeps
+      // the main thread free so the gradient + headline land instantly, then
+      // the neuron field fades up on top (the lite -> full transition).
+      const kick = () => ("requestIdleCallback" in window)
+        ? window.requestIdleCallback(startCosmos, { timeout: 2500 })
+        : window.setTimeout(startCosmos, LITE ? 800 : 150);
+      if (document.readyState === "complete") kick();
+      else window.addEventListener("load", () => window.setTimeout(kick, LITE ? 500 : 0));
     }
   </script>
 </body>
