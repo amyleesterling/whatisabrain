@@ -5,6 +5,9 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 interface Props {
   meshUrl: string;
+  /** Optional second mesh loaded into the same scene, aligned to the main
+   *  mesh's center (e.g. a cerebellum shown alongside the cerebrum). */
+  extraMeshUrl?: string;
   color: string;
   className?: string;
   cameraDistance?: number;
@@ -23,6 +26,7 @@ const sharedLoader = new GLTFLoader();
 
 export default function RealNeuronModel({
   meshUrl,
+  extraMeshUrl,
   color,
   className,
   cameraDistance = 2.6,
@@ -113,60 +117,78 @@ export default function RealNeuronModel({
     let frameId = 0;
     let cancelled = false;
 
-    sharedLoader.load(
-      meshUrl,
-      (gltf) => {
-        if (cancelled) return;
-        cellGroup = new THREE.Group();
-        const cellColor = new THREE.Color(color);
+    const cellColor = new THREE.Color(color);
 
-        // Re-center via bounding box (more visually balanced than vertex mean)
-        const bbox = new THREE.Box3().setFromObject(gltf.scene);
-        const center = new THREE.Vector3();
-        bbox.getCenter(center);
-
-        // Collect original meshes BEFORE mutating the tree (otherwise traverse
-        // walks the wireframe children we add and recurses forever).
-        const sourceMeshes: THREE.Mesh[] = [];
-        gltf.scene.traverse((obj) => {
-          if (obj instanceof THREE.Mesh) sourceMeshes.push(obj);
+    // Collect a gltf's meshes, offset them by `off`, style them, and add to
+    // cellGroup. Collect BEFORE mutating (traverse would recurse into the
+    // wireframe children we add otherwise).
+    const addGltf = (gltf: { scene: THREE.Object3D }, off: THREE.Vector3) => {
+      if (!cellGroup) return;
+      const meshes: THREE.Mesh[] = [];
+      gltf.scene.traverse((obj) => {
+        if (obj instanceof THREE.Mesh) meshes.push(obj);
+      });
+      for (const obj of meshes) {
+        obj.geometry.translate(-off.x, -off.y, -off.z);
+        obj.material = new THREE.MeshStandardMaterial({
+          color: cellColor,
+          emissive: cellColor.clone().multiplyScalar(0.2),
+          metalness: 0.15,
+          roughness: 0.55,
+          transparent: true,
+          opacity: 0.92,
+          side: THREE.DoubleSide,
+          flatShading: false,
         });
-
-        for (const obj of sourceMeshes) {
-          obj.geometry.translate(-center.x, -center.y, -center.z);
-
-          const mainMat = new THREE.MeshStandardMaterial({
-            color: cellColor,
-            emissive: cellColor.clone().multiplyScalar(0.2),
-            metalness: 0.15,
-            roughness: 0.55,
-            transparent: true,
-            opacity: 0.92,
-            side: THREE.DoubleSide,
-            flatShading: false,
-          });
-          obj.material = mainMat;
-
-          // Faint wireframe overlay for that "we mapped every branch" feel
-          const wireMat = new THREE.MeshBasicMaterial({
+        // Faint wireframe overlay for that "we mapped every branch" feel
+        const wireMesh = new THREE.Mesh(
+          obj.geometry,
+          new THREE.MeshBasicMaterial({
             color: cellColor,
             wireframe: true,
             transparent: true,
             opacity: 0.12,
             blending: THREE.AdditiveBlending,
             depthWrite: false,
-          });
-          const wireMesh = new THREE.Mesh(obj.geometry, wireMat);
-          obj.add(wireMesh);
+          }),
+        );
+        obj.add(wireMesh);
+        cellGroup.add(obj);
+      }
+    };
 
-          cellGroup!.add(obj);
-        }
+    sharedLoader.load(
+      meshUrl,
+      (gltf) => {
+        if (cancelled) return;
+        cellGroup = new THREE.Group();
+
+        // Re-center via bounding box (more visually balanced than vertex mean)
+        const bbox = new THREE.Box3().setFromObject(gltf.scene);
+        const center = new THREE.Vector3();
+        bbox.getCenter(center);
+
+        addGltf(gltf, center);
 
         // Tilt slightly so we read 3D depth from the start
         cellGroup.rotation.x = -0.08;
 
         scene.add(cellGroup);
         setLoaded(true);
+
+        // Optional companion mesh (e.g. cerebellum), aligned to the SAME center
+        // offset so it keeps its real spatial relationship to the main mesh.
+        if (extraMeshUrl) {
+          sharedLoader.load(
+            extraMeshUrl,
+            (g2) => {
+              if (cancelled) return;
+              addGltf(g2, center);
+            },
+            undefined,
+            (err) => console.error("Failed to load extra mesh", extraMeshUrl, err),
+          );
+        }
       },
       undefined,
       (err) => {

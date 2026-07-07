@@ -40,12 +40,12 @@ const ROWS: Row[] = [
     mouse: {
       value: 70e6,
       display: "70 million",
-      anchor: "About 8 feet deep at Fenway, if the neurons were baseballs.",
+      anchor: "About the number of people living in France.",
     },
     human: {
       value: 86e9,
       display: "86 billion",
-      anchor: "About 28 Fenway Parks full, using the same baseball picture.",
+      anchor: "More than ten times everyone alive on Earth.",
     },
     ratio: "~1,200x more",
     imageId: "neurons-cloud-comparison",
@@ -72,12 +72,12 @@ const ROWS: Row[] = [
   },
   {
     key: "wire",
-    label: "Wiring - all axon",
+    label: "Wiring, all axon",
     unit: "km",
     mouse: {
       value: 2000,
       display: "~2,000 km",
-      anchor: "About Boston to Miami, if one axon could lie across the coast.",
+      anchor: "Enough living thread to stretch across a continent.",
     },
     human: {
       value: 2_000_000,
@@ -372,6 +372,7 @@ export default function ScaleTest() {
             <div className="relative mx-auto aspect-square w-full max-w-[440px]">
               <RealNeuronModel
                 meshUrl={`${import.meta.env.BASE_URL}meshes/human-brain.glb`}
+                extraMeshUrl={`${import.meta.env.BASE_URL}meshes/human-cerebellum.glb`}
                 color={HUMAN}
                 cameraDistance={2.5}
                 spinSpeed={0.12}

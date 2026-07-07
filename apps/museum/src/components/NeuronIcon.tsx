@@ -6,50 +6,22 @@ import { meshUrl } from "../data/neurons";
 const MOUSE = "#7ee0ff"; // cyan — the mouse brain
 const HUMAN = "#b78bff"; // violet — the human brain
 
-// Headline figures. Every number matches /citations (Azevedo 2009 neuron
-// counts; standard synapse densities; the ~2M km wiring estimate). Mouse
-// synapses shown at ~250B, the midpoint of the cited ~200–300 billion range.
-const STATS: { label: string; human: string; mouse: string }[] = [
-  { label: "Neurons", human: "86 billion", mouse: "70 million" },
-  { label: "Synapses", human: "100 trillion", mouse: "~250 billion" },
-  { label: "Wiring", human: "~2 million km", mouse: "~2,000 km" },
-];
-
 export default function NeuronIcon({ run }: { run: boolean }) {
   return (
     <div className="rounded-2xl glass p-7 sm:p-8 flex flex-col sm:flex-row items-center gap-8">
-      {/* Headline stats — on the left. */}
+      {/* What a neuron is — on the left. */}
       <div className="w-full">
         <p className="text-[11px] uppercase tracking-[0.28em] text-white/45 mb-1.5">One neuron, thousands of connections</p>
-        <p className="font-display font-light leading-tight mb-5" style={{ fontSize: "clamp(1.5rem,2.6vw,2.1rem)" }}>
-          The most famous cell of the brain
+        <h3 className="font-display font-light leading-tight mb-4" style={{ fontSize: "clamp(1.5rem,2.6vw,2.1rem)" }}>
+          Neurons: the most famous cells in the brain
+        </h3>
+        <p className="max-w-xl leading-relaxed text-white/70">
+          A neuron is a signaling cell. It gathers inputs across a bushy tree of dendrites, and when enough of them add
+          up, it fires a tiny electrical pulse down its axon to thousands of other neurons. Billions of them, chattering
+          in patterns, are where every thought, memory, and feeling actually happens.
         </p>
-
-        {/* Column key — stated once. */}
-        <div className="grid grid-cols-[1fr_auto_auto] items-baseline gap-x-4 sm:gap-x-6 text-[11px] uppercase tracking-[0.2em] pb-2">
-          <span />
-          <span className="text-right flex items-center gap-1.5 justify-end" style={{ color: MOUSE }}>
-            <span className="w-2 h-2 rounded-full" style={{ background: MOUSE }} /> Mouse
-          </span>
-          <span className="text-right flex items-center gap-1.5 justify-end" style={{ color: HUMAN }}>
-            <span className="w-2 h-2 rounded-full" style={{ background: HUMAN }} /> Human
-          </span>
-        </div>
-
-        {STATS.map((s) => (
-          <div key={s.label} className="grid grid-cols-[1fr_auto_auto] items-baseline gap-x-4 sm:gap-x-6 border-t border-white/10 py-2.5">
-            <span className="uppercase tracking-[0.22em] text-white/55 text-xs">{s.label}</span>
-            <span className="font-display font-light tabular-nums text-right" style={{ color: MOUSE, fontSize: "clamp(0.95rem,1.5vw,1.25rem)" }}>
-              {s.mouse}
-            </span>
-            <span className="font-display font-light tabular-nums text-right" style={{ color: HUMAN, fontSize: "clamp(0.95rem,1.5vw,1.25rem)" }}>
-              {s.human}
-            </span>
-          </div>
-        ))}
-
-        <Link to="/citations" className="inline-block mt-4 text-sm text-white/45 hover:text-white/80 transition underline decoration-white/25">
-          Sources &amp; Calculations →
+        <Link to="/meet" className="inline-block mt-4 text-sm text-white/55 hover:text-white/85 transition underline decoration-white/25">
+          Meet real neurons →
         </Link>
       </div>
 
