@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inner Cosmos — explore the hidden world inside a brain</title>
+  <meta name="description" content="A collection of experiences built from real connectomics data. Zoom from a whole brain to a single synapse, meet real neurons, or watch the cosmos unfold on a museum wall." />
+  <link rel="icon" href="brain-favicon.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Inner Cosmos" />
+  <meta property="og:description" content="Explore the hidden world inside a brain. Real connectomics data, real neurons." />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --ink-950: #04060c;
+      --ink-900: #070b16;
+      --ink-800: #0c1322;
+      --glow-cyan: #7ee0ff;
+      --glow-magenta: #ff7ee0;
+      --glow-violet: #b78bff;
+      --glow-warm: #ffd9a8;
+      --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+      --font-display: "Fraunces", "Inter", serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: var(--ink-950);
+      color: rgb(245 245 250);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+    }
+
+    ::selection { background: var(--glow-cyan); color: var(--ink-950); }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ---- Fixed cosmic background layers ---- */
+    .bg-gradient {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: radial-gradient(ellipse at center, rgba(28,39,66,0.55) 0%, rgba(4,6,12,1) 70%);
+    }
+    /* Three.js neuron field lives here — behind everything, non-interactive. */
+    #cosmos { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+    /* Soft central darkening so the headline stays legible over any cell that
+       drifts near the middle. */
+    .center-veil {
+      position: fixed; inset: 0; z-index: 5; pointer-events: none;
+      background: radial-gradient(ellipse 55% 40% at center 38%, rgba(4,6,12,0.82) 0%, rgba(4,6,12,0.45) 55%, rgba(4,6,12,0) 85%);
+    }
+    .vignette-top, .vignette-bottom {
+      position: fixed; left: 0; right: 0; height: 10rem; z-index: 5; pointer-events: none;
+    }
+    .vignette-top { top: 0; background: linear-gradient(to bottom, var(--ink-950), transparent); }
+    .vignette-bottom { bottom: 0; background: linear-gradient(to top, var(--ink-950), transparent); }
+
+    /* ---- Header ---- */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 30;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.75rem;
+    }
+    .brand { display: flex; align-items: center; gap: 0.65rem; opacity: 0.92; }
+    .brand .glow-wrap { position: relative; width: 1.75rem; height: 1.75rem; display: inline-flex; align-items: center; justify-content: center; }
+    .brand .glow-wrap::before {
+      content: ""; position: absolute; inset: 0; border-radius: 999px;
+      background: #a87ee0; opacity: 0.55; filter: blur(8px);
+    }
+    .brand img { position: relative; width: 1.75rem; height: 1.75rem; object-fit: contain; }
+    .brand span.name { font-family: var(--font-display); letter-spacing: 0.02em; font-size: 15px; color: rgba(255,255,255,0.9); }
+
+    /* ---- Content ---- */
+    main { position: relative; z-index: 10; }
+
+    .hero {
+      min-height: 92vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 7rem 1.5rem 3rem;
+    }
+    .eyebrow {
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.4em;
+      color: rgba(255,255,255,0.5); margin-bottom: 1.75rem;
+    }
+    h1 {
+      font-family: var(--font-display); font-weight: 300; line-height: 1.05;
+      font-size: clamp(2.1rem, 7vw, 5.6rem); max-width: 60rem; text-wrap: balance;
+    }
+    h1 .accent {
+      font-style: italic; font-weight: 400;
+      background: linear-gradient(90deg, var(--glow-cyan), var(--glow-violet), var(--glow-magenta));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .subtitle {
+      margin-top: 2rem; max-width: 40rem; text-wrap: balance;
+      color: rgba(255,255,255,0.65); font-weight: 300; line-height: 1.7;
+      font-size: clamp(0.95rem, 1.4vw, 1.2rem);
+    }
+    .subtitle .accent {
+      background: linear-gradient(90deg, #23baff, #5b7cff, #8aa6ff);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      font-weight: 400; white-space: nowrap;
+    }
+
+    /* ---- Hero call-to-action ---- */
+    .hero-cta { margin-top: 2.75rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+    @media (min-width: 560px) { .hero-cta { flex-direction: row; } }
+    .btn-primary {
+      position: relative; overflow: hidden;
+      padding: 0.95rem 2.1rem; border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+      backdrop-filter: blur(24px) saturate(160%); -webkit-backdrop-filter: blur(24px) saturate(160%);
+      color: #fff; font-weight: 500; letter-spacing: 0.02em;
+      display: inline-flex; align-items: center; gap: 0.7rem;
+      transition: transform .5s cubic-bezier(0.16,1,0.3,1), box-shadow .5s, border-color .5s;
+    }
+    .btn-primary::before {
+      content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .5s;
+      background: linear-gradient(90deg, rgba(126,224,255,0.22), rgba(183,139,255,0.22), rgba(255,126,224,0.22));
+    }
+    .btn-primary span { position: relative; display: inline-flex; align-items: center; gap: 0.7rem; }
+    .btn-primary:hover { transform: scale(1.04); border-color: rgba(255,255,255,0.34); box-shadow: 0 20px 60px -25px rgba(150,190,255,0.7); }
+    .btn-primary:hover::before { opacity: 1; }
+    .btn-primary:active { transform: scale(0.99); }
+    .btn-primary svg { transition: transform .3s; }
+    .btn-primary:hover svg { transform: translateX(3px); }
+    .btn-ghost { font-size: 0.9rem; color: rgba(255,255,255,0.55); padding: 0.5rem 0.75rem; transition: color .3s; }
+    .btn-ghost:hover { color: rgba(255,255,255,0.9); }
+
+    /* ---- Card grid ---- */
+    .experiences {
+      max-width: 72rem; margin: 0 auto; padding: 2rem 1.5rem 1rem;
+    }
+    .section-label {
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.4em;
+      color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 2.25rem;
+    }
+    .grid-primary {
+      display: grid; gap: 1.1rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .glass {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px) saturate(140%);
+      -webkit-backdrop-filter: blur(20px) saturate(140%);
+    }
+
+    .card {
+      position: relative; border-radius: 1.25rem; overflow: hidden;
+      padding: 1.6rem 1.6rem 1.7rem; min-height: 16.5rem;
+      display: flex; flex-direction: column; justify-content: space-between;
+      transition: transform .5s cubic-bezier(0.16,1,0.3,1), border-color .5s, box-shadow .5s;
+    }
+    .card::after {
+      content: ""; position: absolute; inset: 0; border-radius: inherit;
+      opacity: 0; transition: opacity .5s; pointer-events: none;
+      background: radial-gradient(120% 90% at 15% 0%, var(--tint, rgba(126,224,255,0.16)), transparent 60%);
+    }
+    .card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.18); box-shadow: 0 24px 60px -30px var(--tint, rgba(126,224,255,0.5)); }
+    .card:hover::after { opacity: 1; }
+
+    /* Per-card image slot. Drop a square PNG at the path in each card's <img>.
+       Until the file exists the <img> hides itself (onerror) and the tinted
+       orb underneath shows through, so a missing image never looks broken. */
+    .card-icon {
+      position: relative; width: 4.5rem; height: 4.5rem; border-radius: 1rem;
+      margin-bottom: 1.15rem; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      background:
+        radial-gradient(circle at 35% 30%, var(--tint-solid, var(--glow-cyan)), transparent 70%),
+        rgba(255,255,255,0.03);
+      box-shadow: 0 0 26px -8px var(--tint-solid, var(--glow-cyan));
+    }
+    .card-icon img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+    .card .kicker {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.28em;
+      color: rgba(255,255,255,0.45); margin-bottom: 0.65rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .card .dot { width: 7px; height: 7px; border-radius: 999px; background: var(--tint-solid, var(--glow-cyan)); box-shadow: 0 0 10px var(--tint-solid, var(--glow-cyan)); }
+    .card h3 { font-family: var(--font-display); font-weight: 400; font-size: 1.55rem; line-height: 1.15; }
+    .card p { margin-top: 0.65rem; color: rgba(255,255,255,0.6); font-weight: 300; line-height: 1.6; font-size: 0.92rem; }
+    .card .go {
+      margin-top: 1.1rem; display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.85rem; color: rgba(255,255,255,0.8); font-weight: 500;
+    }
+    .card .go svg { transition: transform .3s; }
+    .card:hover .go svg { transform: translateX(3px); }
+
+    /* Feature card — image panel on the right at wide widths. */
+    .card.feature { grid-column: 1 / -1; min-height: auto; padding: 2rem; }
+    @media (min-width: 760px) {
+      .card.feature { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 2.25rem; align-items: center; }
+    }
+    .card.feature h3 { font-size: clamp(1.9rem, 3vw, 2.6rem); }
+    .card.feature p { font-size: 1rem; }
+    .feature-media {
+      position: relative; border-radius: 1.15rem; overflow: hidden;
+      aspect-ratio: 16 / 11; min-height: 11rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      background:
+        radial-gradient(circle at 30% 25%, rgba(183,139,255,0.35), transparent 65%),
+        radial-gradient(circle at 80% 90%, rgba(126,224,255,0.28), transparent 60%),
+        rgba(255,255,255,0.03);
+      box-shadow: 0 0 40px -12px rgba(183,139,255,0.6);
+    }
+    .feature-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    @media (max-width: 759px) { .feature-media { margin-top: 1.5rem; } }
+
+    .feature-sublinks { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
+    .pill {
+      font-size: 0.78rem; padding: 0.4rem 0.85rem; border-radius: 999px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ---- Secondary row ---- */
+    .grid-secondary {
+      display: grid; gap: 1.1rem; margin-top: 1.1rem;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    .card.small { min-height: 13rem; }
+    .card.small h3 { font-size: 1.25rem; }
+    .card.small .card-icon { width: 3.5rem; height: 3.5rem; border-radius: 0.85rem; margin-bottom: 0.9rem; }
+
+    /* A non-anchor card that still navigates on click: an absolutely-positioned
+       link fills the card, while any real links (e.g. licensing) sit above it. */
+    .card-stretch { position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+    .card-actions { position: relative; z-index: 2; display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem 1.1rem; margin-top: 1.1rem; }
+    .card-actions .go { margin-top: 0; }
+    .license-link {
+      position: relative; z-index: 2; font-size: 0.82rem; font-weight: 500;
+      color: rgba(255,255,255,0.5); transition: color .3s;
+      display: inline-flex; align-items: center; gap: 0.35rem;
+    }
+    .license-link::before { content: ""; width: 5px; height: 5px; border-radius: 999px; background: rgba(255,255,255,0.3); }
+    .license-link:hover { color: var(--glow-cyan); }
+
+    /* ---- Footer ---- */
+    footer {
+      position: relative; z-index: 10;
+      padding: 3.5rem 1.5rem 3rem; text-align: center;
+      font-size: 0.75rem; color: rgba(255,255,255,0.35); letter-spacing: 0.05em;
+    }
+    footer a { transition: color .3s; }
+    footer a:hover { color: rgba(255,255,255,0.7); }
+    footer .sep { margin: 0 0.5rem; }
+
+    /* Entrance */
+    .reveal { opacity: 0; transform: translateY(14px); animation: rise 1s cubic-bezier(0.16,1,0.3,1) forwards; }
+    @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+    .d1 { animation-delay: .1s; } .d2 { animation-delay: .25s; } .d3 { animation-delay: .4s; }
+    .d4 { animation-delay: .55s; } .d5 { animation-delay: .7s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { animation: none; opacity: 1; transform: none; }
+      #cosmos { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-gradient"></div>
+  <div id="cosmos"></div>
+  <div class="center-veil"></div>
+  <div class="vignette-top"></div>
+  <div class="vignette-bottom"></div>
+
+  <header>
+    <a class="brand" href="index.html" aria-label="Inner Cosmos — home">
+      <span class="glow-wrap"><img src="brain-favicon.png" alt="" /></span>
+      <span class="name">Inner Cosmos</span>
+    </a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow reveal d1">Inner Cosmos</p>
+      <h1 class="reveal d2">Explore the hidden world <span class="accent">inside a brain.</span></h1>
+      <p class="subtitle reveal d3">
+        A small collection of experiences built from <span class="accent">real connectomics data.</span>
+        Zoom from a whole brain to a single synapse, meet a neuron, or watch it all unfold on a museum wall. No log-in.
+      </p>
+
+      <div class="hero-cta reveal d4">
+        <a class="btn-primary" href="https://amyleesterling.github.io/inner_cosmos/" aria-label="Explore — begin the Inner Cosmos experience">
+          <span>Explore
+            <svg width="17" height="17" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </a>
+        <a class="btn-ghost" href="#ways">or browse all experiences &#8595;</a>
+      </div>
+    </section>
+
+    <section class="experiences" id="ways">
+      <p class="section-label reveal d1">Ways in</p>
+
+      <div class="grid-primary">
+        <!-- Feature: the main interactive site -->
+        <a class="card feature glass reveal d1" href="https://amyleesterling.github.io/inner_cosmos/"
+           style="--tint: rgba(183,139,255,0.18); --tint-solid: var(--glow-violet);">
+          <div class="feature-copy">
+            <div class="kicker"><span class="dot"></span>The main experience</div>
+            <h3>Inner Cosmos</h3>
+            <p>The full interactive site. An eight-stage zoom from the human brain down to a single synapse, a gallery of real MICrONS neurons you can meet one by one, live neural activity, and a strip of quiet wonder.</p>
+            <div class="feature-sublinks">
+              <span class="pill">Explorer</span>
+              <span class="pill">Meet a Neuron</span>
+              <span class="pill">Activity</span>
+              <span class="pill">Brains by the Numbers</span>
+            </div>
+            <div class="go">Enter
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="feature-media">
+            <img src="icons/inner-cosmos.png" alt="" onerror="this.style.display='none'" />
+          </div>
+        </a>
+
+        <!-- Kids -->
+        <a class="card glass reveal d2" href="https://amyleesterling.github.io/inner_cosmos/kindergarten/1"
+           style="--tint: rgba(255,217,168,0.18); --tint-solid: var(--glow-warm);">
+          <div>
+            <div class="card-icon"><img src="icons/kids.png" alt="" onerror="this.style.display='none'" /></div>
+            <div class="kicker"><span class="dot"></span>For young explorers</div>
+            <h3>Neuroscience for Kids</h3>
+            <p>A gentle, illustrated tour of the brain — the same real neurons, told simply, one wonder at a time.</p>
+          </div>
+          <div class="go">Start the tour
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </a>
+
+        <!-- Museum / art installation (div, not anchor, so the licensing link
+             can live inside without nesting anchors) -->
+        <div class="card glass reveal d3"
+             style="--tint: rgba(126,224,255,0.18); --tint-solid: var(--glow-cyan);">
+          <a class="card-stretch" href="https://amyleesterling.github.io/science-experiment/attract" aria-label="The Cosmos, on a Wall — watch the attract loop"></a>
+          <div>
+            <div class="card-icon"><img src="icons/wall.png" alt="" onerror="this.style.display='none'" /></div>
+            <div class="kicker"><span class="dot"></span>Museums &amp; art installations</div>
+            <h3>The Cosmos, on a Wall</h3>
+            <p>A non-interactive attract loop built for large-format screens (up to 3628&#215;1600 and beyond). Sit back and let the guided zoom play, endlessly. Available to license for museums and installations.</p>
+          </div>
+          <div class="card-actions">
+            <span class="go">Watch it play
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <a class="license-link" href="mailto:amyleerobinson@gmail.com?subject=Inner%20Cosmos%20%E2%80%94%20licensing%20enquiry&amp;body=Hi%20Amy%2C%20I%27m%20interested%20in%20licensing%20the%20Inner%20Cosmos%20wall%20display%20for%3A%20">Contact for licensing</a>
+          </div>
+        </div>
+      </div>
+
+      <p class="section-label reveal d1" style="margin-top: 3.5rem;">Go deeper</p>
+      <div class="grid-secondary">
+        <a class="card small glass reveal d1" href="https://amyleesterling.github.io/science-experiment/scale-test"
+           style="--tint: rgba(255,126,224,0.16); --tint-solid: var(--glow-magenta);">
+          <div>
+            <div class="card-icon"><img src="icons/fun-brain-stats.png" alt="" onerror="this.style.display='none'" /></div>
+            <div class="kicker"><span class="dot"></span>By the numbers</div>
+            <h3>Fun Brain Stats</h3>
+            <p>How big is a neuron, really? How far would your brain's wiring stretch if you laid it end to end? The mind-bending numbers, made tangible.</p>
+          </div>
+          <div class="go">Explore the stats
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </a>
+
+        <a class="card small glass reveal d2" href="https://amyleesterling.github.io/science-experiment/citations"
+           style="--tint: rgba(126,224,255,0.16); --tint-solid: var(--glow-cyan);">
+          <div>
+            <div class="card-icon"><img src="icons/citations.png" alt="" onerror="this.style.display='none'" /></div>
+            <div class="kicker"><span class="dot"></span>Reference</div>
+            <h3>Sources &amp; Citations</h3>
+            <p>Where every number comes from — datasets, papers, and the wiring-length estimate, shown transparently.</p>
+          </div>
+          <div class="go">Read the sources
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <footer class="reveal d3">
+      Data:
+      <a href="https://www.microns-explorer.org/" target="_blank" rel="noreferrer">MICrONS</a>
+      <span class="sep">&#183;</span>
+      <a href="https://www.flywire.ai/" target="_blank" rel="noreferrer">FlyWire</a>
+      <span class="sep">&#183;</span>
+      Built with neuroglancer
+    </footer>
+  </main>
+
+  <!-- Real MICrONS neuron meshes, pirouetting in the background. Ported from
+       the Inner Cosmos site's LandingNeurons: each cell is instanced a few
+       times in a pastel palette and spun slowly around its vertical axis. -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module">
+    import * as THREE from "three";
+    import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const container = document.getElementById("cosmos");
+
+      const PALETTE = ["#7ee0ff", "#b78bff", "#ff7ee0", "#ffd9a8", "#9af5d8", "#aedeff"].map(c => new THREE.Color(c));
+      const INSTANCES_PER_CELL = 4;
+
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x04060c, 0.045);
+
+      const camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 0.1, 100);
+      camera.position.set(0, 0, 9);
+
+      function updateCameraForAspect() {
+        const aspect = camera.aspect;
+        const fovV = THREE.MathUtils.degToRad(camera.fov);
+        const horizHalf = Math.atan(aspect * Math.tan(fovV / 2));
+        const requiredZ = 7 / 2 / Math.tan(horizHalf);
+        camera.position.z = Math.max(9, Math.min(18, requiredZ));
+      }
+      updateCameraForAspect();
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "low-power", preserveDrawingBuffer: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setClearColor(0x000000, 0);
+      container.appendChild(renderer.domElement);
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+      const key = new THREE.DirectionalLight(0xffffff, 0.5);
+      key.position.set(2, 3, 4);
+      scene.add(key);
+
+      const instances = [];
+      const target = new THREE.Vector2(0, 0);
+      const current = new THREE.Vector2(0, 0);
+
+      function placeInstance(group) {
+        const aspect = camera.aspect;
+        const innerA = aspect > 1 ? 3.8 : aspect * 3.8;
+        const innerB = 2.2;
+        const outerA = aspect > 1 ? 9 : aspect * 9;
+        const outerB = 5.0;
+        const angle = Math.random() * Math.PI * 2;
+        const u = Math.random();
+        const a = innerA + u * (outerA - innerA);
+        const b = innerB + u * (outerB - innerB);
+        const pos = new THREE.Vector3(Math.cos(angle) * a, Math.sin(angle) * b, (Math.random() - 0.5) * 6 - 1);
+        group.position.copy(pos);
+        group.rotation.set(0, Math.random() * Math.PI * 2, 0);
+        group.scale.setScalar(3.0 + Math.random() * 2.7);
+        instances.push({
+          group,
+          spinY: (Math.random() < 0.5 ? -1 : 1) * (0.0004 + Math.random() * 0.0008),
+        });
+      }
+
+      const BASE = "./";
+      fetch(`${BASE}meshes/ambient/manifest.json`)
+        .then(r => r.json())
+        .then(manifest => {
+          const loader = new GLTFLoader();
+          manifest.cells.forEach((cell, cellIdx) => {
+            loader.load(`${BASE}meshes/ambient/${cell.segId}.glb`, (gltf) => {
+              const sourceMeshes = [];
+              gltf.scene.traverse(obj => { if (obj.isMesh) sourceMeshes.push(obj); });
+
+              const bbox = new THREE.Box3().setFromObject(gltf.scene);
+              const center = new THREE.Vector3();
+              bbox.getCenter(center);
+              for (const obj of sourceMeshes) obj.geometry.translate(-center.x, -center.y, -center.z);
+
+              for (let i = 0; i < INSTANCES_PER_CELL; i++) {
+                const color = PALETTE[(cellIdx * INSTANCES_PER_CELL + i) % PALETTE.length].clone();
+                const group = new THREE.Group();
+                for (const src of sourceMeshes) {
+                  const mat = new THREE.MeshStandardMaterial({
+                    color, emissive: color.clone().multiplyScalar(0.45),
+                    metalness: 0.0, roughness: 0.7, transparent: true, opacity: 0.65,
+                    side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false,
+                  });
+                  group.add(new THREE.Mesh(src.geometry, mat));
+                  const wireMat = new THREE.MeshBasicMaterial({
+                    color, wireframe: true, transparent: true, opacity: 0.08,
+                    blending: THREE.AdditiveBlending, depthWrite: false,
+                  });
+                  group.add(new THREE.Mesh(src.geometry, wireMat));
+                }
+                placeInstance(group);
+                scene.add(group);
+              }
+            }, undefined, (err) => console.error(`failed to load ${cell.segId}`, err));
+          });
+        })
+        .catch(e => console.error("ambient manifest", e));
+
+      window.addEventListener("mousemove", (e) => {
+        target.x = (e.clientX / window.innerWidth - 0.5) * 0.4;
+        target.y = -(e.clientY / window.innerHeight - 0.5) * 0.25;
+      });
+
+      window.addEventListener("resize", () => {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        updateCameraForAspect();
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      });
+
+      function animate() {
+        current.lerp(target, 0.04);
+        camera.position.x = current.x;
+        camera.position.y = current.y;
+        camera.lookAt(0, 0, 0);
+        for (const inst of instances) inst.group.rotation.y += inst.spinY;
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      }
+      animate();
+    }
+  </script>
+</body>
+</html>
