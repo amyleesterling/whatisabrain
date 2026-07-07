@@ -145,6 +145,19 @@ export default function Citations() {
             isotropic-fractionator figure (Azevedo et al., 2009); the mouse count is the standard literature value.</li>
           <li><span style={{ color: HUMAN }}>Synapses: ~100 trillion (human), ~200–300 billion (mouse).</span> Standard cortical-density
             estimates; the mouse cubic-millimeter density is confirmed directly by MICrONS.</li>
+          <li><span style={{ color: HUMAN }}>Energy: ~2% of body weight, ~20% of resting energy.</span> Standard neuroenergetics
+            (Raichle &amp; Gusnard, <em>PNAS</em>, 2002; the brain uses roughly a fifth of the body's resting metabolism).</li>
+          <li><span style={{ color: HUMAN }}>Composition: ~60% fat by dry weight.</span> Standard neurochemistry; the lipid-rich myelin
+            insulates axons so signals conduct faster.</li>
+          <li><span style={{ color: HUMAN }}>Fastest signal: up to ~120 m/s (~270 mph).</span> Peak conduction velocity in large myelinated
+            axons (standard neurophysiology).</li>
+          <li><span style={{ color: HUMAN }}>Glia: roughly a 1:1 ratio to neurons (~85 billion non-neuronal cells).</span> From the same
+            isotropic-fractionator counts that gave 86 billion neurons (Azevedo et al., 2009; Herculano-Houzel, 2014) —
+            overturning the old "10:1 glia" myth.</li>
+          <li><span style={{ color: HUMAN }}>Cortical surface: ~0.2 to 0.25 m² (~2.2 to 2.7 sq ft) unfolded.</span> Standard cortical
+            morphometry; the folds pack that sheet into the skull.</li>
+          <li><span style={{ color: HUMAN }}>Synaptic cleft: ~20 to 40 nm wide.</span> The gap neurotransmitters cross at a chemical synapse
+            (standard cell biology / electron microscopy).</li>
         </ul>
 
         {/* Fenway baseball framing — the anchor used on the stats pages */}

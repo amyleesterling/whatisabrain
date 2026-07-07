@@ -22,6 +22,36 @@ const BRAIN_FACTS: { label: string; value: string; note: string }[] = [
   { label: "Cell types", value: "3,000+", note: "known types (2023 human brain atlas)" },
 ];
 
+// Narrative facts, sourced on /citations under "More brain facts".
+const MORE_FACTS: { hl: string; title: string; body: string; link?: { to: string; label: string } }[] = [
+  {
+    hl: "2% / 20%",
+    title: "A hungry little organ",
+    body: "Your brain is about 2% of your body weight, but it burns about 20% of your energy. Thinking is expensive.",
+  },
+  {
+    hl: "~60% fat",
+    title: "Thinking with butter",
+    body: "By dry weight your brain is roughly 60% fat. You are, structurally, thinking with butter. That fat insulates your wiring so signals can race: down a myelinated axon an impulse hits about 120 m/s, roughly 270 mph.",
+  },
+  {
+    hl: "~1 : 1",
+    title: "You are half not-neurons",
+    body: "You have about 86 billion neurons, and almost exactly that many non-neuronal (glial) cells too, close to a 1:1 ratio.",
+    link: { to: "/meet/coral-fan", label: "Meet an inhibitory cell" },
+  },
+  {
+    hl: "~2.5 ft²",
+    title: "Why your brain is wrinkled",
+    body: "The folds exist to pack in surface area. Unfold your cortex and it is about 2.5 square feet, or 0.23 m², roughly the size of a large pizza box.",
+  },
+  {
+    hl: "~30 nm",
+    title: "Nothing ever quite touches",
+    body: "Neurons never actually touch. Every thought leaps a gap about 20 to 40 nanometers wide, thousands of times thinner than a hair.",
+  },
+];
+
 type Row = {
   key: string;
   label: string;
@@ -366,6 +396,28 @@ export default function ScaleTest() {
               <p className="mt-1 text-xs leading-relaxed text-white/50">{f.note}</p>
             </div>
           ))}
+        </section>
+
+        {/* More brain facts — the strange, delightful ones. */}
+        <section className="mt-14">
+          <p className="mb-1 text-[11px] uppercase tracking-[0.28em] text-white/45">More about your brain</p>
+          <h2 className="mb-5 font-display text-3xl font-light sm:text-4xl">Stranger than the numbers</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {MORE_FACTS.map((f) => (
+              <div key={f.title} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+                <p className="font-display font-light tabular-nums" style={{ color: HUMAN, fontSize: "clamp(1.5rem,2.4vw,2rem)" }}>
+                  {f.hl}
+                </p>
+                <p className="mt-1 text-[11px] uppercase tracking-[0.24em] text-white/45">{f.title}</p>
+                <p className="mt-2 text-sm leading-relaxed text-white/65">{f.body}</p>
+                {f.link && (
+                  <Link to={f.link.to} className="mt-3 inline-block text-sm text-white/55 underline decoration-white/25 transition hover:text-white/85">
+                    {f.link.label} →
+                  </Link>
+                )}
+              </div>
+            ))}
+          </div>
         </section>
 
         <section className="mt-12">
