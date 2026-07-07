@@ -157,10 +157,39 @@ export default function Explore() {
     const isPhone = isNarrow || isCoarse;
     return !isPhone;
   });
+  // Museum mode: on desktop/tablet the experience auto-advances through the
+  // stages like the wall display, while every interactive control stays
+  // available. On phones it stays fully manual. "Phone" = narrow viewport or
+  // a coarse/touch primary pointer. Pausable via the play/pause control.
+  const [isPhone] = useState(() => {
+    if (typeof window === "undefined") return false;
+    // Guard against a transient 0-width read (don't misclassify as a phone).
+    const isNarrow = window.innerWidth > 0 && window.innerWidth < 768;
+    const isCoarse =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(pointer: coarse)").matches;
+    return isNarrow || isCoarse;
+  });
+  const [autoPaused, setAutoPaused] = useState(false);
   const last = STAGES.length - 1;
   const activityStageIndex = STAGES.length - 2;
   const isActivityStage = stage === activityStageIndex;
   const isCtaStage = stage === last;
+
+  // Museum-mode auto-advance (desktop only, when not paused). Each stage
+  // schedules the next; the activity swarm gets a longer dwell; the final
+  // stage loops back to the start. Manual Back/Next still work — the loop
+  // simply continues from wherever the visitor lands.
+  const autoPlaying = !isPhone && !autoPaused;
+  useEffect(() => {
+    if (!autoPlaying) return;
+    const dwell = stage === activityStageIndex ? 14000 : 8500;
+    const id = window.setTimeout(() => {
+      setTextCollapsed(false);
+      setStage((s) => (s >= last ? 0 : s + 1));
+    }, dwell);
+    return () => clearTimeout(id);
+  }, [autoPlaying, stage, last, activityStageIndex]);
 
   // Activity-stage data: lazy-loaded the first time the user reaches the
   // last slide. Same dataset the standalone /activity page uses.
@@ -538,6 +567,20 @@ export default function Explore() {
                 When the text is collapsed we lift the controls to sit closer
                 to where the title block was, so they don't float in space. */}
             <div className={`flex flex-wrap items-center justify-center gap-x-3 gap-y-2.5 pointer-events-auto ${textCollapsed ? "mt-0" : "mt-10"}`}>
+              {!isPhone && (
+                <button
+                  onClick={() => setAutoPaused((p) => !p)}
+                  className="p-2.5 rounded-full glass hover:bg-white/[0.08] transition cursor-pointer"
+                  aria-label={autoPaused ? "Resume auto-play" : "Pause auto-play"}
+                  title={autoPaused ? "Resume auto-play" : "Pause auto-play"}
+                >
+                  {autoPaused ? (
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 3l9 5-9 5V3z" fill="currentColor" /></svg>
+                  ) : (
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5.5 3v10M10.5 3v10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
+                  )}
+                </button>
+              )}
               <button
                 onClick={() => {
                   setStage((s) => Math.max(0, s - 1));
