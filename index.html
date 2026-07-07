@@ -191,17 +191,16 @@
     .btn-primary {
       position: relative; overflow: hidden;
       padding: 0.95rem 2.2rem; border-radius: 999px;
-      background: rgba(9,13,26,0.68);
-      border: 1px solid rgba(255,255,255,0.42);
-      backdrop-filter: blur(24px) saturate(160%); -webkit-backdrop-filter: blur(24px) saturate(160%);
+      background: linear-gradient(120deg, #4a7bff 0%, #9a5cff 100%);
+      border: 1px solid rgba(255,255,255,0.3);
       color: #fff; font-weight: 600; letter-spacing: 0.02em;
       display: inline-flex; align-items: center; gap: 0.7rem;
-      box-shadow: 0 10px 34px -10px rgba(0,0,0,0.75), 0 0 34px -10px rgba(150,190,255,0.5);
-      transition: transform .5s cubic-bezier(0.16,1,0.3,1), box-shadow .5s, border-color .5s, background .5s;
+      box-shadow: 0 10px 34px -10px rgba(0,0,0,0.5), 0 0 42px -8px rgba(120,110,255,0.65);
+      transition: transform .5s cubic-bezier(0.16,1,0.3,1), box-shadow .5s, border-color .5s, filter .5s;
     }
     .btn-primary::before {
       content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .5s;
-      background: linear-gradient(90deg, rgba(126,224,255,0.22), rgba(183,139,255,0.22), rgba(255,126,224,0.22));
+      background: linear-gradient(120deg, #5b8cff 0%, #ab6cff 100%);
     }
     .btn-primary span { position: relative; display: inline-flex; align-items: center; gap: 0.7rem; }
     .btn-primary:hover { transform: scale(1.04); border-color: rgba(255,255,255,0.34); box-shadow: 0 20px 60px -25px rgba(150,190,255,0.7); }
@@ -263,12 +262,6 @@
       box-shadow: 0 0 26px -8px var(--tint-solid, var(--glow-cyan));
     }
     .card-icon img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    /* Cards without a photo get a centered, glowing line-icon instead. */
-    .card-icon--glyph { display: flex; align-items: center; justify-content: center; }
-    .card-icon--glyph svg { width: 3.4rem; height: 3.4rem; filter: drop-shadow(0 0 12px var(--tint-solid, var(--glow-cyan))); }
-    .card.small .card-icon--glyph svg { width: 2.9rem; height: 2.9rem; }
-    /* Meet card holds a live 3D neuron — darken the banner so the violet cell pops. */
-    #meet-neuron-viewer { background: radial-gradient(circle at 50% 42%, rgba(34,24,62,0.6), rgba(8,10,20,0.92)); }
 
     .card .kicker {
       font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.28em;
@@ -457,7 +450,7 @@
         <a class="card glass reveal d4" href="/explore/meet"
            style="--tint: rgba(183,139,255,0.18); --tint-solid: var(--glow-violet);">
           <div>
-            <div class="card-icon" id="meet-neuron-viewer" role="img" aria-label="The Coral Fan neuron, a real 3D reconstruction from MICrONS, slowly rotating"></div>
+            <div class="card-icon"><img src="icons/meet.webp" alt="The Coral Fan neuron, a real MICrONS reconstruction" onerror="this.style.display='none'" /></div>
             <div class="kicker"><span class="dot"></span>Up close</div>
             <h3>Meet a Neuron</h3>
             <p>Spin real, 3D reconstructed brain cells one at a time. Pyramidal neurons, chandelier cells, and more, each a true MICrONS reconstruction.</p>
@@ -473,14 +466,7 @@
         <a class="card small glass reveal d1" href="/museum/stats"
            style="--tint: rgba(255,126,224,0.16); --tint-solid: var(--glow-magenta);">
           <div>
-            <div class="card-icon card-icon--glyph">
-              <svg viewBox="0 0 48 48" fill="none" stroke="rgba(255,255,255,0.94)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M9 40h30" />
-                <rect x="12" y="26" width="6.5" height="12" rx="1.6" fill="rgba(255,255,255,0.16)" />
-                <rect x="21" y="18" width="6.5" height="20" rx="1.6" fill="rgba(255,255,255,0.16)" />
-                <rect x="30" y="10" width="6.5" height="28" rx="1.6" fill="rgba(255,255,255,0.16)" />
-              </svg>
-            </div>
+            <div class="card-icon"><img src="icons/fun-brain-stats.webp" alt="A human brain reconstructed as a point cloud" onerror="this.style.display='none'" /></div>
             <div class="kicker"><span class="dot"></span>By the numbers</div>
             <h3>Fun Brain Stats</h3>
             <p>How big is a neuron, really? How far would your brain's wiring stretch if you laid it end to end? The mind-bending numbers, made tangible.</p>
@@ -493,13 +479,7 @@
         <a class="card small glass reveal d2" href="/museum/citations"
            style="--tint: rgba(126,224,255,0.16); --tint-solid: var(--glow-cyan);">
           <div>
-            <div class="card-icon card-icon--glyph">
-              <svg viewBox="0 0 48 48" fill="none" stroke="rgba(255,255,255,0.94)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M15 8h13l8 8v22a2 2 0 0 1-2 2H15a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z" fill="rgba(255,255,255,0.08)" />
-                <path d="M28 8v8h8" />
-                <path d="M19 25h11M19 31h11M19 37h7" />
-              </svg>
-            </div>
+            <div class="card-icon"><img src="icons/citations.webp" alt="A cortical neuron reconstructed from MICrONS" onerror="this.style.display='none'" /></div>
             <div class="kicker"><span class="dot"></span>Reference</div>
             <h3>Sources &amp; Citations</h3>
             <p>Where every number comes from — datasets, papers, and the wiring-length estimate, shown transparently.</p>
@@ -658,80 +638,6 @@
       }
       animate();
     }
-  </script>
-
-  <!-- Live 3D "Coral Fan" neuron in the Meet a Neuron card. Lazy-loaded when
-       the card nears the viewport so the ~2MB mesh never blocks first paint. -->
-  <script type="module">
-    import * as THREE from "three";
-    import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-
-    (function () {
-      const el = document.getElementById("meet-neuron-viewer");
-      if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-      let started = false;
-      const init = () => {
-        if (started) return; started = true;
-        const scene = new THREE.Scene();
-        const size = () => [el.clientWidth || 1, el.clientHeight || 1];
-        let [w, h] = size();
-        const camera = new THREE.PerspectiveCamera(42, w / h, 0.01, 100);
-        camera.position.set(0, 0, 2.0);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "low-power" });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.setSize(w, h);
-        renderer.setClearColor(0x000000, 0);
-        renderer.domElement.style.cssText = "width:100%;height:100%;display:block;pointer-events:none;";
-        el.appendChild(renderer.domElement);
-
-        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-        const color = new THREE.Color("#c58bff");
-        const key = new THREE.DirectionalLight(0xffffff, 0.95); key.position.set(2, 4, 5); scene.add(key);
-        const fill = new THREE.DirectionalLight(color, 0.4); fill.position.set(-3, 1, -2); scene.add(fill);
-
-        let group = null;
-        new GLTFLoader().load("/museum/meshes/coral-fan.glb", (gltf) => {
-          group = new THREE.Group();
-          const bbox = new THREE.Box3().setFromObject(gltf.scene);
-          const c = new THREE.Vector3(); bbox.getCenter(c);
-          const dim = new THREE.Vector3(); bbox.getSize(dim);
-          const meshes = [];
-          gltf.scene.traverse((o) => { if (o.isMesh) meshes.push(o); });
-          for (const o of meshes) {
-            o.geometry.translate(-c.x, -c.y, -c.z);
-            o.material = new THREE.MeshStandardMaterial({
-              color, emissive: color.clone().multiplyScalar(0.42), roughness: 0.5, metalness: 0.1,
-              transparent: true, opacity: 0.95, side: THREE.DoubleSide,
-            });
-            group.add(o);
-          }
-          const maxDim = Math.max(dim.x, dim.y, dim.z) || 1;
-          group.scale.setScalar(2.6 / maxDim);
-          group.rotation.x = -0.1;
-          scene.add(group);
-        }, undefined, (err) => console.error("coral-fan load failed", err));
-
-        const animate = () => {
-          if (group) group.rotation.y += 0.004;
-          renderer.render(scene, camera);
-          requestAnimationFrame(animate);
-        };
-        animate();
-        addEventListener("resize", () => {
-          [w, h] = size();
-          camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h);
-        });
-      };
-
-      // Defer past first paint, then mount — keeps the ~2MB mesh off the
-      // critical path without depending on scroll/observer timing.
-      if ("requestIdleCallback" in window) {
-        requestIdleCallback(init, { timeout: 1400 });
-      } else {
-        setTimeout(init, 700);
-      }
-    })();
   </script>
 </body>
 </html>

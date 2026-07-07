@@ -338,13 +338,6 @@ export default function ScaleTest() {
               >
                 Sources and calculations
               </Link>
-              <Link
-                to="/wonder"
-                className="rounded-full border px-5 py-2.5 text-sm font-medium transition"
-                style={{ borderColor: "rgba(126,224,255,0.22)", color: MOUSE, background: "rgba(126,224,255,0.08)" }}
-              >
-                More wonder-first context
-              </Link>
             </div>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
