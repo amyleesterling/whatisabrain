@@ -8,6 +8,7 @@ import HubLogo from "../components/HubLogo";
 
 const MOUSE = "#7ee0ff";
 const HUMAN = "#b78bff";
+const FLY = "#ffc861";
 
 // Every cell shown in the experience, all real MICrONS minnie65 (seg_m1300)
 // reconstructions. [nickname, type, seg ID].
@@ -164,6 +165,25 @@ export default function Citations() {
             (standard cell biology / electron microscopy).</li>
         </ul>
 
+        {/* Fly brain — FlyWire connectome */}
+        <h2 className="font-display font-light mt-14 mb-4" style={{ fontSize: "clamp(1.4rem,2.2vw,1.8rem)" }}>The fly brain (FlyWire)</h2>
+        <p className="text-white/60 mb-4 text-[15px] leading-relaxed">
+          Every figure on the fly page is from the FlyWire connectome of an adult female <em>Drosophila melanogaster</em>,
+          published in <em>Nature</em> in October 2024. It is the first complete wiring diagram of an adult animal brain.
+        </p>
+        <ul className="space-y-3 text-white/70 text-[15px] leading-relaxed">
+          <li><span style={{ color: FLY }}>139,255 neurons and ~54.5 million synapses.</span> The proofread FlyWire
+            connectome (Dorkenwald et al., 2024); the wiring graph has ~15.1 million weighted connections.</li>
+          <li><span style={{ color: FLY }}>8,453 cell types, of which 4,581 are new.</span> Systematic whole-brain cell
+            typing (Schlegel et al., 2024) — 3,643 previously proposed types plus 4,581 described for the first time.</li>
+          <li><span style={{ color: FLY }}>Brain under 1 mm wide.</span> The adult <em>Drosophila</em> brain spans a few
+            hundred microns, smaller than a poppy seed.</li>
+          <li><span style={{ color: FLY }}>617,000× fewer neurons than a human.</span> 86 billion ÷ 139,255 ≈ 617,000. All
+            of the fly's neurons would fit within a few cubic millimeters of human cortex, well under the size of a grain of rice.</li>
+          <li><span style={{ color: FLY }}>Earlier complete connectomes: 302 neurons (C. elegans, 1986) and 3,016 (fly
+            larva, 2023).</span> The adult fly is by far the largest brain mapped in full.</li>
+        </ul>
+
         {/* Fenway baseball framing — the anchor used on the stats pages */}
         <div className="mt-8 rounded-2xl glass p-7 sm:p-9">
           <h2 className="font-display font-light mb-2" style={{ fontSize: "clamp(1.4rem,2.3vw,1.9rem)" }}>
@@ -316,11 +336,14 @@ export default function Citations() {
           <li>Shapson-Coe A, et al. A petavoxel fragment of human cerebral cortex reconstructed at nanoscale resolution. <em>Science</em> 2024.</li>
           <li>The MICrONS Consortium. Functional connectomics spanning multiple areas of mouse visual cortex. <em>Nature</em> 2025.</li>
           <li>Schneider-Mizell CM, et al. Inhibitory specificity from a connectomic census of mouse visual cortex. <em>Nature</em> 2024.</li>
+          <li>Dorkenwald S, et al. Neuronal wiring diagram of an adult brain. <em>Nature</em> 2024 (FlyWire).</li>
+          <li>Schlegel P, et al. Whole-brain annotation and multi-connectome cell typing of Drosophila. <em>Nature</em> 2024.</li>
         </ol>
 
         <div className="mt-16 flex items-center gap-2 text-xs text-white/40">
           <span className="inline-block w-2 h-2 rounded-full" style={{ background: MOUSE }} /> Mouse
           <span className="inline-block w-2 h-2 rounded-full ml-4" style={{ background: HUMAN }} /> Human
+          <span className="inline-block w-2 h-2 rounded-full ml-4" style={{ background: FLY }} /> Fly
         </div>
       </div>
     </div>

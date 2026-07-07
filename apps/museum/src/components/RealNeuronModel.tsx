@@ -19,6 +19,10 @@ interface Props {
   /** Allow scroll-wheel zoom (default true). Turn off for embeds so the
    *  model doesn't hijack page scrolling while keeping drag-to-rotate. */
   zoom?: boolean;
+  /** Auto-scale the loaded mesh so its largest dimension frames the view,
+   *  regardless of the mesh's native coordinate units. Needed for meshes that
+   *  aren't pre-normalized (e.g. the FlyWire brain in raw microns). */
+  fit?: boolean;
 }
 
 // Tiny shared GLTFLoader — one instance per page is fine, three handles it.
@@ -34,6 +38,7 @@ export default function RealNeuronModel({
   rim = true,
   interactive = true,
   zoom = true,
+  fit = false,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);
@@ -169,6 +174,15 @@ export default function RealNeuronModel({
         bbox.getCenter(center);
 
         addGltf(gltf, center);
+
+        // Optionally normalize scale so any mesh (whatever its native units)
+        // frames the same way. Target ~1.6 units pairs with cameraDistance ~2.5.
+        if (fit) {
+          const size = new THREE.Vector3();
+          bbox.getSize(size);
+          const maxDim = Math.max(size.x, size.y, size.z) || 1;
+          cellGroup.scale.setScalar(1.6 / maxDim);
+        }
 
         // Tilt slightly so we read 3D depth from the start
         cellGroup.rotation.x = -0.08;

@@ -9,6 +9,7 @@ import Brain2 from "./pages/Brain2";
 import Kindergarten from "./pages/Kindergarten";
 import Wonder from "./pages/Wonder";
 import ScaleTest from "./pages/ScaleTest";
+import FlyStats from "./pages/FlyStats";
 import ScaleWall from "./pages/ScaleWall";
 import Citations from "./pages/Citations";
 import WallLaunch from "./pages/WallLaunch";
@@ -42,6 +43,9 @@ export default function App() {
         {/* "By the numbers" — brain stats. /scale-test kept as a legacy alias. */}
         <Route path="/stats" element={<ScaleTest />} />
         <Route path="/scale-test" element={<ScaleTest />} />
+        {/* Fly brain: the FlyWire whole-brain connectome, as a companion to
+            the human "by the numbers" page. */}
+        <Route path="/fly" element={<FlyStats />} />
         {/* Simplified stats as they'd sit inside the wall's card 5. */}
         <Route path="/scale-wall" element={<ScaleWall />} />
         {/* Sources, calculations & credits (esp. the wiring estimate). */}
