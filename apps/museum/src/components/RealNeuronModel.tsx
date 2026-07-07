@@ -13,6 +13,9 @@ interface Props {
   rim?: boolean;
   /** Allow user to drag to rotate and scroll to zoom (default true) */
   interactive?: boolean;
+  /** Allow scroll-wheel zoom (default true). Turn off for embeds so the
+   *  model doesn't hijack page scrolling while keeping drag-to-rotate. */
+  zoom?: boolean;
 }
 
 // Tiny shared GLTFLoader — one instance per page is fine, three handles it.
@@ -26,6 +29,7 @@ export default function RealNeuronModel({
   spinSpeed = 0.18,
   rim = true,
   interactive = true,
+  zoom = true,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);
@@ -58,6 +62,7 @@ export default function RealNeuronModel({
       controls.enableDamping = true;
       controls.dampingFactor = 0.08;
       controls.enablePan = false;
+      controls.enableZoom = zoom;
       controls.autoRotate = spinSpeed > 0;
       // OrbitControls.autoRotateSpeed is in "rotations per ~6s" units; scale
       // spinSpeed (rad/s) so the visual cadence matches the previous model

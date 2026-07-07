@@ -375,6 +375,7 @@ export default function ScaleTest() {
                 color={HUMAN}
                 cameraDistance={2.5}
                 spinSpeed={0.12}
+                zoom={false}
                 className="absolute inset-0"
               />
             </div>
