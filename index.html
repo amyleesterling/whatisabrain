@@ -445,6 +445,20 @@
             <a class="license-link" href="mailto:amyleerobinson@gmail.com?subject=Inner%20Cosmos%20%E2%80%94%20licensing%20enquiry&amp;body=Hi%20Amy%2C%20I%27m%20interested%20in%20licensing%20the%20Inner%20Cosmos%20wall%20display%20for%3A%20">Contact for licensing</a>
           </div>
         </div>
+
+        <!-- Meet a Neuron -->
+        <a class="card glass reveal d4" href="/explore/meet"
+           style="--tint: rgba(183,139,255,0.18); --tint-solid: var(--glow-violet);">
+          <div>
+            <div class="card-icon"><img src="icons/meet.webp" alt="A real 3D-reconstructed neuron you can spin" onerror="this.style.display='none'" /></div>
+            <div class="kicker"><span class="dot"></span>Up close</div>
+            <h3>Meet a Neuron</h3>
+            <p>Spin real, 3D-reconstructed brain cells one at a time — pyramidal neurons, chandelier cells, and more, each a true MICrONS reconstruction.</p>
+          </div>
+          <div class="go">Meet them
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </a>
       </div>
 
       <p class="section-label reveal d1" style="margin-top: 3.5rem;">Go deeper</p>
@@ -507,7 +521,7 @@
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       const container = document.getElementById("cosmos");
 
-      const PALETTE = ["#7ee0ff", "#b78bff", "#ff7ee0", "#ffd9a8", "#9af5d8", "#aedeff"].map(c => new THREE.Color(c));
+      const PALETTE = ["#39c6ff", "#a163ff", "#ff5cc0", "#ffb24d", "#3fe3b0", "#4aa6ff"].map(c => new THREE.Color(c));
       const INSTANCES_PER_CELL = 4;
 
       const scene = new THREE.Scene();
@@ -580,8 +594,8 @@
                 const group = new THREE.Group();
                 for (const src of sourceMeshes) {
                   const mat = new THREE.MeshStandardMaterial({
-                    color, emissive: color.clone().multiplyScalar(0.45),
-                    metalness: 0.0, roughness: 0.7, transparent: true, opacity: 0.65,
+                    color, emissive: color.clone().multiplyScalar(0.9),
+                    metalness: 0.0, roughness: 0.55, transparent: true, opacity: 0.72,
                     side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false,
                   });
                   group.add(new THREE.Mesh(src.geometry, mat));

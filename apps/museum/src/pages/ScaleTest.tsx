@@ -4,10 +4,23 @@ import { Link } from "react-router-dom";
 import ReferenceTable from "../components/ReferenceTable";
 import NeuronIcon from "../components/NeuronIcon";
 import LandmarkMetrics from "../components/LandmarkMetrics";
+import RealNeuronModel from "../components/RealNeuronModel";
 import type { ScaleTestImageId } from "../data/scaleTestImageQueue";
 
 const MOUSE = "#7ee0ff";
 const HUMAN = "#b78bff";
+
+// Top-line facts about the human brain, shown above the fold beside the 3D
+// model. Figures match /citations (volume/weight are standard adult averages;
+// cell-type count from the 2023 human brain transcriptomic atlas).
+const BRAIN_FACTS: { label: string; value: string; note: string }[] = [
+  { label: "Volume", value: "~1.3 L", note: "about 1,260 cm³ of tissue" },
+  { label: "Size", value: "~1.4 kg", note: "roughly 3 pounds" },
+  { label: "Neurons", value: "86 billion", note: "give or take a few billion" },
+  { label: "Synapses", value: "~100 trillion", note: "connections between neurons" },
+  { label: "Wiring", value: "~2 million km", note: "axons + dendrites, end to end" },
+  { label: "Cell types", value: "3,000+", note: "known types (2023 human brain atlas)" },
+];
 
 type Row = {
   key: string;
@@ -350,6 +363,36 @@ export default function ScaleTest() {
                 </p>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Top-line brain facts + an interactive 3D human brain. */}
+        <section className="mt-10 grid gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
+          <div className="rounded-[1.75rem] glass p-4 sm:p-5">
+            <div className="relative mx-auto aspect-square w-full max-w-[440px]">
+              <RealNeuronModel
+                meshUrl={`${import.meta.env.BASE_URL}meshes/human-brain.glb`}
+                color={HUMAN}
+                cameraDistance={2.5}
+                spinSpeed={0.12}
+                className="absolute inset-0"
+              />
+            </div>
+            <p className="mt-1 text-center text-[11px] uppercase tracking-[0.26em] text-white/40">
+              Drag to rotate — a real human-brain mesh
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            {BRAIN_FACTS.map((f) => (
+              <div key={f.label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
+                <p className="text-[11px] uppercase tracking-[0.24em] text-white/45">{f.label}</p>
+                <p className="mt-1.5 font-display font-light tabular-nums" style={{ color: HUMAN, fontSize: "clamp(1.4rem,2.2vw,1.9rem)" }}>
+                  {f.value}
+                </p>
+                <p className="mt-1 text-xs leading-relaxed text-white/50">{f.note}</p>
+              </div>
+            ))}
           </div>
         </section>
 
