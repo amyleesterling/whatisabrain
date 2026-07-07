@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import ReferenceTable from "../components/ReferenceTable";
 import NeuronIcon from "../components/NeuronIcon";
 import LandmarkMetrics from "../components/LandmarkMetrics";
-import ScaleTestImageFigure from "../components/ScaleTestImageFigure";
 import type { ScaleTestImageId } from "../data/scaleTestImageQueue";
 
 const MOUSE = "#7ee0ff";
@@ -174,7 +173,7 @@ function Stat({ row, run }: { row: Row; run: boolean }) {
         </span>
       </div>
 
-      <div className="mt-6 grid gap-5 xl:grid-cols-[1.05fr_0.95fr] xl:items-start">
+      <div className="mt-6">
         <div className="rounded-[1.5rem] border border-white/8 bg-white/[0.025] p-5 sm:p-6">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-8">
             <div className="min-w-0 flex-1">
@@ -206,8 +205,6 @@ function Stat({ row, run }: { row: Row; run: boolean }) {
             </div>
           </div>
         </div>
-
-        <ScaleTestImageFigure imageId={row.imageId} eyebrow="Visual metaphor" caption={row.imageCaption} />
       </div>
     </div>
   );
@@ -218,7 +215,7 @@ function EarthWrap({ run }: { run: boolean }) {
 
   return (
     <div className="rounded-[1.75rem] glass p-7 sm:p-8">
-      <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr] xl:items-center">
+      <div>
         <div className="rounded-[1.5rem] border border-white/8 bg-white/[0.025] p-5 sm:p-6">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
             <svg viewBox="0 0 220 220" width="220" height="220" className="mx-auto shrink-0">
@@ -291,12 +288,6 @@ function EarthWrap({ run }: { run: boolean }) {
             </div>
           </div>
         </div>
-
-        <ScaleTestImageFigure
-          imageId="earth-wrapped-in-axon-wiring"
-          eyebrow="Flagship visual"
-          caption="This is the showpiece version of the wiring claim: biology behaving like orbital ribbon, not industrial cable."
-        />
       </div>
     </div>
   );
@@ -316,7 +307,7 @@ export default function ScaleTest() {
       style={{ background: "radial-gradient(ellipse at 50% 0%, #101a2e 0%, #04060c 60%)" }}
     >
       <div className="mx-auto max-w-6xl px-6 py-16 sm:py-24">
-        <section className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+        <section>
           <div>
             <p className="mb-4 text-[11px] uppercase tracking-[0.4em] text-white/45">By the numbers</p>
             <h1 className="font-display text-[clamp(2.4rem,5.6vw,5rem)] font-light leading-[0.97]">
@@ -354,40 +345,16 @@ export default function ScaleTest() {
               <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
                 <p className="text-[11px] uppercase tracking-[0.28em] text-white/45">Design principle</p>
                 <p className="mt-2 text-sm leading-relaxed text-white/68">
-                  Wonder first, then comprehension. The page keeps the numerical claims in text and lets the images do
+                  Wonder first, then comprehension. The page keeps the numerical claims in text and lets the visuals do
                   the atmosphere and scale metaphors.
                 </p>
               </div>
             </div>
           </div>
-
-          <ScaleTestImageFigure
-            imageId="hero-brains-by-the-numbers"
-            eyebrow="Hero image"
-            caption="The whole page starts with the core comparison: one tiny cyan brain and one much larger violet one, suspended in the same field."
-          />
         </section>
 
-        <section className="mt-12 grid gap-5 lg:grid-cols-2">
-          <ScaleTestImageFigure
-            imageId="numbers-dissolve-into-nebula"
-            eyebrow="Transition image"
-            caption="When the quantities get too big to feel, the page shifts from arithmetic into atmosphere."
-          />
-          <ScaleTestImageFigure
-            imageId="volume-spheres-mouse-human"
-            eyebrow="Scale cue"
-            caption="The sphere metaphor previews why volume-scaling helps the mouse stay visible without pretending the gap is small."
-          />
-        </section>
-
-        <section className="mt-12 grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
+        <section className="mt-12">
           <NeuronIcon run={run} />
-          <ScaleTestImageFigure
-            imageId="single-synapse-spark"
-            eyebrow="One connection"
-            caption="The page starts close: one synapse, one spark, and the sense that even the smallest unit is already crowded with possibility."
-          />
         </section>
 
         <section className="mt-12 grid gap-5">
@@ -401,48 +368,7 @@ export default function ScaleTest() {
         </section>
 
         <section className="mt-12">
-          <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="text-[11px] uppercase tracking-[0.28em] text-white/45">Metaphors that stick</p>
-              <h2 className="mt-2 font-display text-3xl font-light sm:text-4xl">Picture the scale before you read it</h2>
-            </div>
-            <p className="max-w-2xl text-sm leading-relaxed text-white/58 sm:text-base">
-              These side images give the numerical text something your eye can hold onto: stadiums, coastlines, orbital
-              loops, and a brain that behaves like a tiny planet.
-            </p>
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-2 2xl:grid-cols-4">
-            <ScaleTestImageFigure
-              imageId="fenway-baseball-scale"
-              eyebrow="Neuron count"
-              caption="Fenway turns the neuron count into a physical bowl of glowing baseball-sized points."
-            />
-            <ScaleTestImageFigure
-              imageId="moon-and-back-wiring"
-              eyebrow="Human wiring"
-              caption="The Moon-and-back metaphor makes the human wiring claim feel spatial instead of abstract."
-            />
-            <ScaleTestImageFigure
-              imageId="woven-planet-brain"
-              eyebrow="General brain wiring"
-              caption="A brain woven like a weathered little planet helps bridge anatomy and cosmology."
-            />
-            <ScaleTestImageFigure
-              imageId="scale-ladder-earth-brain-neuron-synapse"
-              eyebrow="Summary image"
-              caption="The footer ladder ties the whole page together: Earth to brain to neuron to synapse, all on one thread."
-            />
-          </div>
-        </section>
-
-        <section className="mt-12 grid gap-5 xl:grid-cols-[1.15fr_0.85fr]">
           <LandmarkMetrics run={run} />
-          <ScaleTestImageFigure
-            imageId="scale-ladder-earth-brain-neuron-synapse"
-            eyebrow="Page close"
-            caption="At the end, the ladder image gives the page one last clean hierarchy of scale without embedding any numbers into the art itself."
-          />
         </section>
 
         <section className="mt-14">

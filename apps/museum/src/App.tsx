@@ -39,7 +39,8 @@ export default function App() {
         <Route path="/kindergarten" element={<Kindergarten />} />
         <Route path="/kindergarten/:stage" element={<Kindergarten />} />
         <Route path="/wonder" element={<Wonder />} />
-        {/* Test page for the "by the numbers" comparison viz (→ card 5). */}
+        {/* "By the numbers" — brain stats. /scale-test kept as a legacy alias. */}
+        <Route path="/stats" element={<ScaleTest />} />
         <Route path="/scale-test" element={<ScaleTest />} />
         {/* Simplified stats as they'd sit inside the wall's card 5. */}
         <Route path="/scale-wall" element={<ScaleWall />} />
