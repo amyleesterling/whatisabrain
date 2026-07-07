@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import HubLogo from "../components/HubLogo";
 
 // Sources, calculations & credits. Route: /citations.
 // The load-bearing one is the human-brain wiring estimate, derived here in
@@ -58,7 +59,10 @@ export default function Citations() {
   return (
     <div className="min-h-screen w-full text-white" style={{ background: "radial-gradient(ellipse at 50% 0%, #101a2e 0%, #04060c 60%)" }}>
       <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
-        <Link to="/" className="text-sm text-white/45 hover:text-white/80 transition">← Inner Cosmos</Link>
+        <div className="flex items-center gap-4">
+          <HubLogo />
+          <Link to="/stats" className="text-sm text-white/45 transition hover:text-white/80">← Back to stats</Link>
+        </div>
 
         <p className="text-[11px] uppercase tracking-[0.4em] text-white/45 mt-10 mb-4">Internal reference</p>
         <h1 className="font-display font-light leading-[1.05]" style={{ fontSize: "clamp(2rem,4.5vw,3.4rem)" }}>

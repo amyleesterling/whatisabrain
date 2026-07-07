@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import HubLogo from "./HubLogo";
 
 export default function NavBar() {
   const { pathname, search } = useLocation();
@@ -25,28 +26,7 @@ export default function NavBar() {
 
   return (
     <header className="fixed top-0 inset-x-0 z-30 px-5 sm:px-8 py-4 flex items-center justify-between pointer-events-none">
-      <Link
-        to="/"
-        className="pointer-events-auto group flex items-center gap-2.5 transition-opacity hover:opacity-100 opacity-90"
-        aria-label="Inner Cosmos — home"
-      >
-        <span className="relative inline-flex items-center justify-center w-7 h-7">
-          {/* Soft violet glow under the brain icon — matches the stage-1 mesh
-              tint without the rainbow-halo competing with its color. */}
-          <span
-            className="absolute inset-0 rounded-full opacity-55 blur-[8px]"
-            style={{ background: "#a87ee0" }}
-          />
-          <img
-            src={`${import.meta.env.BASE_URL}brain-favicon.png`}
-            alt=""
-            className="relative w-7 h-7 object-contain pointer-events-none"
-          />
-        </span>
-        <span className="font-display tracking-wide text-[15px] text-white/90 group-hover:text-white">
-          Inner Cosmos
-        </span>
-      </Link>
+      <HubLogo className="pointer-events-auto opacity-90 transition-opacity hover:opacity-100" />
 
       <nav className="pointer-events-auto flex items-center gap-1 text-sm">
         <NavLink to="/meet" current={pathname.startsWith("/meet")}>

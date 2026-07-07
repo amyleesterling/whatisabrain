@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import HubLogo from "./HubLogo";
 
 export default function NavBar() {
   const { pathname } = useLocation();
@@ -16,7 +17,8 @@ export default function NavBar() {
   ) return null;
 
   return (
-    <header className="fixed top-0 inset-x-0 z-30 px-5 sm:px-8 py-4 flex items-center justify-end pointer-events-none">
+    <header className="fixed top-0 inset-x-0 z-30 px-5 sm:px-8 py-4 flex items-center justify-between pointer-events-none">
+      <HubLogo className="pointer-events-auto opacity-90 transition-opacity hover:opacity-100" />
       <nav className="pointer-events-auto flex items-center gap-1 text-sm">
         <NavLink to="/meet" current={pathname.startsWith("/meet")}>
           Meet a Neuron

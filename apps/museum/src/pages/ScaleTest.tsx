@@ -5,6 +5,8 @@ import ReferenceTable from "../components/ReferenceTable";
 import NeuronIcon from "../components/NeuronIcon";
 import LandmarkMetrics from "../components/LandmarkMetrics";
 import RealNeuronModel from "../components/RealNeuronModel";
+import FactIcon, { type FactIconId } from "../components/FactIcon";
+import StatsTopBar from "../components/StatsTopBar";
 import type { ScaleTestImageId } from "../data/scaleTestImageQueue";
 
 const MOUSE = "#7ee0ff";
@@ -23,31 +25,36 @@ const BRAIN_FACTS: { label: string; value: string; note: string }[] = [
 ];
 
 // Narrative facts, sourced on /citations under "More brain facts".
-const MORE_FACTS: { hl: string; title: string; body: string; link?: { to: string; label: string } }[] = [
+const MORE_FACTS: { hl: string; title: string; body: string; icon: FactIconId; link?: { to: string; label: string } }[] = [
   {
     hl: "2% / 20%",
     title: "A hungry little organ",
+    icon: "energy",
     body: "Your brain is about 2% of your body weight, but it burns about 20% of your energy. Thinking is expensive.",
   },
   {
     hl: "~60% fat",
     title: "Thinking with butter",
+    icon: "myelin",
     body: "By dry weight your brain is roughly 60% fat. You are, structurally, thinking with butter. That fat insulates your wiring so signals can race: down a myelinated axon an impulse hits about 120 m/s, roughly 270 mph.",
   },
   {
     hl: "~1 : 1",
     title: "You are half not-neurons",
+    icon: "ratio",
     body: "You have about 86 billion neurons, and almost exactly that many non-neuronal (glial) cells too, close to a 1:1 ratio.",
     link: { to: "/meet/coral-fan", label: "Meet an inhibitory cell" },
   },
   {
     hl: "~2.5 ft²",
     title: "Why your brain is wrinkled",
+    icon: "folds",
     body: "The folds exist to pack in surface area. Unfold your cortex and it is about 2.5 square feet, or 0.23 m², roughly the size of a large pizza box.",
   },
   {
     hl: "~30 nm",
     title: "Nothing ever quite touches",
+    icon: "gap",
     body: "Neurons never actually touch. Every thought leaps a gap about 20 to 40 nanometers wide, thousands of times thinner than a hair.",
   },
 ];
@@ -342,10 +349,11 @@ export default function ScaleTest() {
 
   return (
     <div
-      className="min-h-screen w-full text-white"
+      className="min-h-screen w-full text-white [scroll-behavior:smooth] [&_section[id]]:scroll-mt-24"
       style={{ background: "radial-gradient(ellipse at 50% 0%, #101a2e 0%, #04060c 60%)" }}
     >
-      <div className="mx-auto max-w-6xl px-6 py-16 sm:py-24">
+      <StatsTopBar />
+      <div className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
         {/* Hero: interactive 3D brain (top on mobile, right on desktop) + title. */}
         <section className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div className="order-1 lg:order-2 rounded-[1.75rem] glass p-4 sm:p-5">
@@ -386,7 +394,7 @@ export default function ScaleTest() {
         </section>
 
         {/* Six key brain facts. */}
-        <section className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+        <section id="numbers" className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
           {BRAIN_FACTS.map((f) => (
             <div key={f.label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
               <p className="text-[11px] uppercase tracking-[0.24em] text-white/45">{f.label}</p>
@@ -399,12 +407,13 @@ export default function ScaleTest() {
         </section>
 
         {/* More brain facts — the strange, delightful ones. */}
-        <section className="mt-14">
+        <section id="facts" className="mt-14">
           <p className="mb-1 text-[11px] uppercase tracking-[0.28em] text-white/45">More about your brain</p>
           <h2 className="mb-5 font-display text-3xl font-light sm:text-4xl">Stranger than the numbers</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {MORE_FACTS.map((f) => (
-              <div key={f.title} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6">
+              <div key={f.title} className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-5 pr-16 sm:p-6 sm:pr-20">
+                <FactIcon id={f.icon} className="absolute right-4 top-4 h-11 w-11 sm:right-5 sm:top-5 sm:h-14 sm:w-14" />
                 <p className="font-display font-light tabular-nums" style={{ color: HUMAN, fontSize: "clamp(1.5rem,2.4vw,2rem)" }}>
                   {f.hl}
                 </p>
@@ -424,7 +433,7 @@ export default function ScaleTest() {
           <NeuronIcon run={run} />
         </section>
 
-        <section className="mt-12 grid gap-5">
+        <section id="compare" className="mt-12 grid gap-5">
           {ROWS.map((row) => (
             <Stat key={row.key} row={row} run={run} />
           ))}
@@ -434,11 +443,11 @@ export default function ScaleTest() {
           <EarthWrap run={run} />
         </section>
 
-        <section className="mt-12">
+        <section id="units" className="mt-12">
           <LandmarkMetrics run={run} />
         </section>
 
-        <section className="mt-14">
+        <section id="sources" className="mt-14">
           <p className="mb-4 text-[11px] uppercase tracking-[0.28em] text-white/45">Reference</p>
           <ReferenceTable />
           <Link
