@@ -267,6 +267,8 @@
     .card-icon--glyph { display: flex; align-items: center; justify-content: center; }
     .card-icon--glyph svg { width: 3.4rem; height: 3.4rem; filter: drop-shadow(0 0 12px var(--tint-solid, var(--glow-cyan))); }
     .card.small .card-icon--glyph svg { width: 2.9rem; height: 2.9rem; }
+    /* Meet card holds a live 3D neuron — darken the banner so the violet cell pops. */
+    #meet-neuron-viewer { background: radial-gradient(circle at 50% 42%, rgba(34,24,62,0.6), rgba(8,10,20,0.92)); }
 
     .card .kicker {
       font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.28em;
@@ -675,7 +677,7 @@
         const size = () => [el.clientWidth || 1, el.clientHeight || 1];
         let [w, h] = size();
         const camera = new THREE.PerspectiveCamera(42, w / h, 0.01, 100);
-        camera.position.set(0, 0, 2.5);
+        camera.position.set(0, 0, 2.0);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "low-power" });
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setSize(w, h);
@@ -699,13 +701,13 @@
           for (const o of meshes) {
             o.geometry.translate(-c.x, -c.y, -c.z);
             o.material = new THREE.MeshStandardMaterial({
-              color, emissive: color.clone().multiplyScalar(0.28), roughness: 0.55, metalness: 0.1,
+              color, emissive: color.clone().multiplyScalar(0.42), roughness: 0.5, metalness: 0.1,
               transparent: true, opacity: 0.95, side: THREE.DoubleSide,
             });
             group.add(o);
           }
           const maxDim = Math.max(dim.x, dim.y, dim.z) || 1;
-          group.scale.setScalar(1.7 / maxDim);
+          group.scale.setScalar(2.6 / maxDim);
           group.rotation.x = -0.1;
           scene.add(group);
         }, undefined, (err) => console.error("coral-fan load failed", err));
