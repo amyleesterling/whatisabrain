@@ -337,6 +337,22 @@ export default function Explore({ attract = false }: { attract?: boolean }) {
 
   return (
     <>
+      {/* The museum edition is built for a widescreen wall (3628x1600). On a
+          portrait phone it reflows into an unusable column, so cover it with a
+          rotate prompt. CSS hides this in landscape and on desktop. */}
+      {attract && (
+        <div className="attract-rotate-gate">
+          <div className="attract-rotate-inner">
+            <svg className="attract-rotate-icon" width="54" height="54" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="7" y="2" width="10" height="20" rx="2.5" stroke="currentColor" strokeWidth="1.4" />
+              <path d="M3.5 8.5A6.5 6.5 0 0 1 8 4M20.5 15.5A6.5 6.5 0 0 1 16 20" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+            </svg>
+            <p className="attract-rotate-dims">This displays at 3628 × 1600</p>
+            <p className="attract-rotate-sub">A widescreen experience built for the wall. Rotate your phone to watch, or open it on a larger screen.</p>
+          </div>
+        </div>
+      )}
+
       <div
         className="fixed inset-0 z-0 pointer-events-none"
         style={{

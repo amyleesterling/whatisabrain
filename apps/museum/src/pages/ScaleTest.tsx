@@ -176,14 +176,8 @@ function Stat({ row, run }: { row: Row; run: boolean }) {
 
   return (
     <div className="rounded-[1.75rem] glass p-7 sm:p-8">
-      <div className="flex flex-wrap items-baseline justify-between gap-4">
+      <div className="flex flex-wrap items-baseline gap-4">
         <h3 className="font-display text-2xl font-light sm:text-3xl">{row.label}</h3>
-        <span
-          className="rounded-full border px-3 py-1 text-xs uppercase tracking-[0.2em]"
-          style={{ color: HUMAN, background: "rgba(183,139,255,0.12)", borderColor: "rgba(183,139,255,0.25)" }}
-        >
-          {row.ratio}
-        </span>
       </div>
 
       <div className="mt-6">
@@ -224,7 +218,7 @@ function Stat({ row, run }: { row: Row; run: boolean }) {
 }
 
 function EarthWrap({ run }: { run: boolean }) {
-  const loops = [0, 1, 2, 3, 4, 5, 6, 7];
+  const loops = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
   return (
     <div className="rounded-[1.75rem] glass p-7 sm:p-8">
@@ -263,29 +257,31 @@ function EarthWrap({ run }: { run: boolean }) {
                   strokeWidth="0.6"
                 />
               ))}
+              {/* Wire wound tightly AROUND the globe (rx = sphere radius) so it
+                  reads as thread wrapping the Earth, not orbits circling it. */}
               {loops.map((loop) => (
                 <motion.ellipse
                   key={loop}
                   cx="110"
                   cy="110"
-                  rx="70"
-                  ry="24"
+                  rx="58"
+                  ry={9 + (loop % 6) * 9.5}
                   fill="none"
                   stroke="url(#earthWrapWire)"
-                  strokeWidth="1.6"
+                  strokeWidth="1.4"
                   strokeLinecap="round"
-                  transform={`rotate(${loop * 45 - 68} 110 110)`}
-                  style={{ filter: "drop-shadow(0 0 4px rgba(150,170,255,0.7))" }}
+                  transform={`rotate(${loop * 30} 110 110)`}
+                  style={{ filter: "drop-shadow(0 0 3px rgba(150,170,255,0.65))" }}
                   initial={{ pathLength: 0, opacity: 0 }}
-                  animate={run ? { pathLength: 1, opacity: 0.75 } : {}}
-                  transition={{ duration: 1.4, delay: 0.3 + loop * 0.16, ease: "easeInOut" }}
+                  animate={run ? { pathLength: 1, opacity: 0.68 } : {}}
+                  transition={{ duration: 1.5, delay: 0.2 + loop * 0.09, ease: "easeInOut" }}
                 />
               ))}
             </svg>
 
             <div>
               <p className="mb-2 text-[11px] uppercase tracking-[0.28em] text-white/45">Total wiring, human brain</p>
-              <p className="font-display text-[clamp(1.8rem,3vw,2.6rem)] font-light">~2 million km of axon</p>
+              <p className="font-display text-[clamp(1.8rem,3vw,2.6rem)] font-light">~2 million km of wiring</p>
               <p className="mt-3 max-w-md leading-relaxed text-white/70">
                 Laid end to end, the wiring in a single human brain would wrap around the Earth roughly{" "}
                 <span style={{ color: HUMAN }}>50 times</span> or reach{" "}
@@ -320,48 +316,9 @@ export default function ScaleTest() {
       style={{ background: "radial-gradient(ellipse at 50% 0%, #101a2e 0%, #04060c 60%)" }}
     >
       <div className="mx-auto max-w-6xl px-6 py-16 sm:py-24">
-        <section>
-          <div>
-            <p className="mb-4 text-[11px] uppercase tracking-[0.4em] text-white/45">By the numbers</p>
-            <h1 className="font-display text-[clamp(2.4rem,5.6vw,5rem)] font-light leading-[0.97]">
-              Brains by the numbers
-            </h1>
-            <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/70 sm:text-xl">
-              A single neuron makes thousands of connections. Scale that up and the numbers stop feeling like numbers,
-              so this page turns them into volumes, distances, stadiums, horizons, and impossible threads.
-            </p>
-
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Link
-                to="/citations"
-                className="rounded-full border border-white/15 bg-white/8 px-5 py-2.5 text-sm font-medium text-white/88 transition hover:bg-white/12"
-              >
-                Sources and calculations
-              </Link>
-            </div>
-
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
-                <p className="text-[11px] uppercase tracking-[0.28em] text-white/45">Palette</p>
-                <p className="mt-2 text-sm leading-relaxed text-white/68">
-                  Mouse scale glows in cyan. Human scale glows in violet. The dark field stays quiet so the comparison
-                  feels cinematic instead of infographic-heavy.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
-                <p className="text-[11px] uppercase tracking-[0.28em] text-white/45">Design principle</p>
-                <p className="mt-2 text-sm leading-relaxed text-white/68">
-                  Wonder first, then comprehension. The page keeps the numerical claims in text and lets the visuals do
-                  the atmosphere and scale metaphors.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Top-line brain facts + an interactive 3D human brain. */}
-        <section className="mt-10 grid gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
-          <div className="rounded-[1.75rem] glass p-4 sm:p-5">
+        {/* Hero: interactive 3D brain (top on mobile, right on desktop) + title. */}
+        <section className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+          <div className="order-1 lg:order-2 rounded-[1.75rem] glass p-4 sm:p-5">
             <div className="relative mx-auto aspect-square w-full max-w-[440px]">
               <RealNeuronModel
                 meshUrl={`${import.meta.env.BASE_URL}meshes/human-brain.glb`}
@@ -378,17 +335,37 @@ export default function ScaleTest() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            {BRAIN_FACTS.map((f) => (
-              <div key={f.label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
-                <p className="text-[11px] uppercase tracking-[0.24em] text-white/45">{f.label}</p>
-                <p className="mt-1.5 font-display font-light tabular-nums" style={{ color: HUMAN, fontSize: "clamp(1.4rem,2.2vw,1.9rem)" }}>
-                  {f.value}
-                </p>
-                <p className="mt-1 text-xs leading-relaxed text-white/50">{f.note}</p>
-              </div>
-            ))}
+          <div className="order-2 lg:order-1">
+            <p className="mb-4 text-[11px] uppercase tracking-[0.4em] text-white/45">By the numbers</p>
+            <h1 className="font-display text-[clamp(2.4rem,5.6vw,5rem)] font-light leading-[0.97]">
+              Brains by the numbers
+            </h1>
+            <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/70 sm:text-xl">
+              A single neuron makes thousands of connections. Scale that up and the numbers stop feeling like numbers,
+              so this page turns them into volumes, distances, and impossible threads.
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link
+                to="/citations"
+                className="rounded-full border border-white/15 bg-white/8 px-5 py-2.5 text-sm font-medium text-white/88 transition hover:bg-white/12"
+              >
+                Sources and calculations
+              </Link>
+            </div>
           </div>
+        </section>
+
+        {/* Six key brain facts. */}
+        <section className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+          {BRAIN_FACTS.map((f) => (
+            <div key={f.label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
+              <p className="text-[11px] uppercase tracking-[0.24em] text-white/45">{f.label}</p>
+              <p className="mt-1.5 font-display font-light tabular-nums" style={{ color: HUMAN, fontSize: "clamp(1.4rem,2.2vw,1.9rem)" }}>
+                {f.value}
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-white/50">{f.note}</p>
+            </div>
+          ))}
         </section>
 
         <section className="mt-12">

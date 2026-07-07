@@ -14,8 +14,8 @@ export default function ReferenceTable() {
             <th className="text-left font-medium p-4">Brain</th>
             <th className="text-right font-medium p-4">Neurons</th>
             <th className="text-right font-medium p-4">Synapses</th>
-            <th className="text-right font-medium p-4">Axon — myelinated</th>
-            <th className="text-right font-medium p-4">Axon — all (est.)</th>
+            <th className="text-right font-medium p-4">Myelinated axon</th>
+            <th className="text-right font-medium p-4">All axon (est.)</th>
           </tr>
         </thead>
         <tbody className="font-light">
@@ -23,7 +23,7 @@ export default function ReferenceTable() {
             <td className="p-4" style={{ color: MOUSE }}>Mouse brain</td>
             <td className="p-4 text-right text-white/80">~70 million</td>
             <td className="p-4 text-right text-white/80">~200–300 billion</td>
-            <td className="p-4 text-right text-white/60">—</td>
+            <td className="p-4 text-right text-white/60">n/a</td>
             <td className="p-4 text-right text-white/80">~2,000 km</td>
           </tr>
           <tr className="border-t border-white/10">

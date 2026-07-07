@@ -300,10 +300,12 @@
 
     .feature-sublinks { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
     .pill {
+      position: relative; z-index: 2; /* clickable above the card's stretched link */
       font-size: 0.78rem; padding: 0.4rem 0.85rem; border-radius: 999px;
       background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.7);
+      color: rgba(255,255,255,0.7); transition: background .3s, color .3s, border-color .3s;
     }
+    a.pill:hover { background: rgba(255,255,255,0.14); color: #fff; border-color: rgba(255,255,255,0.28); }
 
     /* ---- Secondary row ---- */
     .grid-secondary {
@@ -390,18 +392,20 @@
       <p class="section-label reveal d1">Ways in</p>
 
       <div class="grid-primary">
-        <!-- Feature: the main interactive site -->
-        <a class="card feature glass reveal d1" href="/explore/explore"
-           style="--tint: rgba(183,139,255,0.18); --tint-solid: var(--glow-violet);">
+        <!-- Feature: the main interactive site (div + stretched link so the
+             pills can be their own links without nesting anchors) -->
+        <div class="card feature glass reveal d1"
+             style="--tint: rgba(183,139,255,0.18); --tint-solid: var(--glow-violet);">
+          <a class="card-stretch" href="/explore/explore" aria-label="Enter the main experience"></a>
           <div class="feature-copy">
             <div class="kicker"><span class="dot"></span>The main experience</div>
             <h3>Inner Cosmos</h3>
             <p>The full interactive site. An eight-stage zoom from the human brain down to a single synapse, a gallery of real MICrONS neurons you can meet one by one, live neural activity, and a strip of quiet wonder.</p>
             <div class="feature-sublinks">
-              <span class="pill">Explorer</span>
-              <span class="pill">Meet a Neuron</span>
-              <span class="pill">Activity</span>
-              <span class="pill">Brains by the Numbers</span>
+              <a class="pill" href="/explore/explore">Explorer</a>
+              <a class="pill" href="/explore/meet">Meet a Neuron</a>
+              <a class="pill" href="/explore/activity">Activity</a>
+              <a class="pill" href="/museum/stats">Brains by the Numbers</a>
             </div>
             <div class="go">Enter
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -410,7 +414,7 @@
           <div class="feature-media">
             <img src="icons/inner-cosmos.webp" alt="A real pyramidal neuron reconstructed in 3D from MICrONS brain data" onerror="this.style.display='none'" />
           </div>
-        </a>
+        </div>
 
         <!-- Kids -->
         <a class="card glass reveal d2" href="/explore/kindergarten/1"

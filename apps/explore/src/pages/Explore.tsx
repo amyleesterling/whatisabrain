@@ -304,7 +304,7 @@ export default function Explore() {
               manifest={activityData.manifest}
               traces={activityData.traces}
               elapsedSec={activityElapsed}
-              className="absolute inset-0"
+              className="absolute inset-0 swarm-shift"
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center text-white/40 text-[11px] uppercase tracking-[0.3em]">

@@ -117,3 +117,9 @@
 /* Presentation mode: full-screen 3D, chrome out of the way. Toggled
    from /explore via the present icon (or "p" key). */
 body.present-mode header { display: none !important; }
+
+/* On portrait phones the activity swarm sits behind the copy with dead space
+   above it. Shift it up into that empty area so it reads as its own visual. */
+@media (orientation: portrait) and (max-width: 767px) {
+  .swarm-shift { transform: translateY(-16%); }
+}

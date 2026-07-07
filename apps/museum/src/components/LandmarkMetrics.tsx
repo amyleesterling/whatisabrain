@@ -24,7 +24,7 @@ const METRICS: Metric[] = [
     fun: {
       big: "~170M",
       unit: "Eiffel Towers of bread",
-      sub: "Your 86 billion neurons as baguettes, end to end, make a ~56-million-km breadstick — 170 million Eiffel Towers tall.",
+      sub: "Your 86 billion neurons as baguettes, end to end, make a ~56 million km breadstick, 170 million Eiffel Towers tall.",
     },
     metric: {
       big: "~56M",
@@ -43,7 +43,7 @@ const METRICS: Metric[] = [
     fun: {
       big: "~37,000",
       unit: "Great Pyramids",
-      sub: "As the limestone blocks of Giza — 2.3 million to a pyramid — your neurons could raise thirty-seven thousand of them.",
+      sub: "As the limestone blocks of Giza, 2.3 million to a pyramid, your neurons could raise thirty seven thousand of them.",
     },
     metric: {
       big: "~86",
@@ -124,7 +124,7 @@ const METRICS: Metric[] = [
     fun: {
       big: "~20",
       unit: "watts to run it",
-      sub: "Your whole brain sips about 20 watts — a dim bulb that still out-thinks any supercomputer.",
+      sub: "Your whole brain sips about 20 watts, a dim bulb that still out-thinks any supercomputer.",
     },
     metric: {
       big: "~20",
@@ -144,7 +144,7 @@ const METRICS: Metric[] = [
     fun: {
       big: "~270",
       unit: "mph nerve signals",
-      sub: "Down your fastest myelinated axons, impulses hit up to 270 mph — enough to leave a Formula 1 car behind.",
+      sub: "Down your fastest myelinated axons, impulses hit up to 270 mph, enough to leave a Formula 1 car behind.",
     },
     metric: {
       big: "~435",
@@ -158,7 +158,7 @@ const METRICS: Metric[] = [
     fun: {
       big: "~2.5",
       unit: "petabytes of memory",
-      sub: "One estimate puts your memory near 2.5 petabytes — roughly three million hours of shows.",
+      sub: "One estimate puts your memory near 2.5 petabytes, roughly three million hours of shows.",
     },
     metric: {
       big: "~2.5",
@@ -189,7 +189,7 @@ export default function LandmarkMetrics({ run }: { run: boolean }) {
         </defs>
       </svg>
 
-      <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
         <div>
           <h3 className="font-display text-2xl sm:text-3xl font-light mb-1.5">
             {showMetric ? "Your brain, in metric" : "Your brain, in ridiculous units"}
@@ -203,7 +203,7 @@ export default function LandmarkMetrics({ run }: { run: boolean }) {
         </div>
         <button
           onClick={() => setShowMetric((v) => !v)}
-          className="shrink-0 rounded-full glass px-4 py-2 text-sm text-white/80 hover:text-white hover:bg-white/[0.08] transition cursor-pointer"
+          className="w-full sm:w-auto sm:shrink-0 rounded-2xl glass px-4 py-2.5 text-sm leading-snug text-left text-white/80 hover:text-white hover:bg-white/[0.08] transition cursor-pointer"
         >
           {showMetric ? "Bring back the ridiculous units" : "Emperors are for peasants. Give me the metric system."}
         </button>
