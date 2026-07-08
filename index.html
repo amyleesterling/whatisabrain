@@ -334,6 +334,35 @@
     .card-note { margin-top: 0.75rem; font-size: 0.82rem; line-height: 1.55; color: rgba(255,255,255,0.5); }
     .card-note strong { color: rgba(255,255,255,0.88); font-weight: 600; }
 
+    /* ---- Email signup ---- */
+    .signup { max-width: 72rem; margin: 3rem auto 0; padding: 0 1.5rem; }
+    .signup-card {
+      border-radius: 1.5rem; padding: 1.9rem 1.75rem;
+      display: flex; flex-direction: column; gap: 1.15rem; align-items: center; text-align: center;
+    }
+    @media (min-width: 720px) {
+      .signup-card { flex-direction: row; justify-content: space-between; text-align: left; gap: 2rem; padding: 1.9rem 2.5rem; }
+    }
+    .signup-copy h2 { font-family: var(--font-display); font-weight: 300; font-size: clamp(1.3rem, 2.4vw, 1.9rem); line-height: 1.15; }
+    .signup-copy p { margin-top: 0.5rem; color: rgba(255,255,255,0.6); font-weight: 300; font-size: 0.92rem; line-height: 1.55; max-width: 32rem; }
+    #signup-form { display: flex; gap: 0.6rem; width: 100%; max-width: 27rem; flex-wrap: wrap; }
+    #signup-email {
+      flex: 1 1 12rem; min-width: 0; padding: 0.8rem 1rem; border-radius: 999px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14);
+      color: #fff; font-size: 0.95rem; outline: none; transition: border-color .3s, background .3s;
+    }
+    #signup-email::placeholder { color: rgba(255,255,255,0.35); }
+    #signup-email:focus { border-color: rgba(126,224,255,0.6); background: rgba(255,255,255,0.07); }
+    #signup-form button {
+      padding: 0.8rem 1.4rem; border-radius: 999px; border: 1px solid rgba(255,255,255,0.25);
+      background: linear-gradient(120deg, #4a7bff, #9a5cff); color: #fff; font-weight: 600;
+      cursor: pointer; white-space: nowrap; transition: transform .3s, filter .3s;
+    }
+    #signup-form button:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    #signup-form button:disabled { opacity: 0.6; cursor: default; transform: none; }
+    .signup-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+    .signup-msg { min-height: 1.2em; font-size: 0.85rem; margin-top: 0.1rem; text-align: center; }
+
     /* ---- Footer ---- */
     footer {
       position: relative; z-index: 10;
@@ -537,6 +566,21 @@
       </div>
     </section>
 
+    <section class="signup reveal d2">
+      <div class="signup-card glass">
+        <div class="signup-copy">
+          <h2>Get new brains in your inbox</h2>
+          <p>New experiences and brain wonders, a few times a year. No spam, unsubscribe anytime.</p>
+        </div>
+        <form id="signup-form" novalidate>
+          <input id="signup-email" type="email" required placeholder="you@example.com" aria-label="Email address" autocomplete="email" />
+          <input type="text" id="signup-hp" class="signup-hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <button type="submit">Notify me</button>
+        </form>
+        <p class="signup-msg" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
     <footer class="reveal d3">
       Data:
       <a href="https://www.microns-explorer.org/" target="_blank" rel="noreferrer">MICrONS</a>
@@ -704,6 +748,40 @@
       if (document.readyState === "complete") kick();
       else window.addEventListener("load", () => window.setTimeout(kick, LITE ? 500 : 0));
     }
+  </script>
+
+  <!-- Email signup → Google Apps Script Web App (appends to a Google Sheet).
+       Paste your deployed Web App URL into SUBSCRIBE_URL below (see
+       apps-script/subscribe.gs for the one-time setup). -->
+  <script>
+    (function () {
+      var SUBSCRIBE_URL = "PASTE_APPS_SCRIPT_WEB_APP_URL";
+      var form = document.getElementById("signup-form");
+      if (!form) return;
+      var msg = document.querySelector(".signup-msg");
+      var email = document.getElementById("signup-email");
+      var hp = document.getElementById("signup-hp");
+      var btn = form.querySelector("button");
+      function show(text, ok) { msg.textContent = text; msg.style.color = ok ? "#7be0a4" : "#ff9a9a"; }
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (hp.value) return; // honeypot: silently ignore bots
+        var val = (email.value || "").trim();
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(val)) { show("Please enter a valid email.", false); return; }
+        if (SUBSCRIBE_URL.indexOf("PASTE_") === 0) { show("Almost there, this form isn't connected yet.", false); return; }
+        var label = btn.textContent;
+        btn.disabled = true; btn.textContent = "Sending…";
+        fetch(SUBSCRIBE_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ email: val, lang: navigator.language || "", source: "hub" })
+        })
+          .then(function () { form.reset(); show("Thanks! You're on the list.", true); })
+          .catch(function () { show("Something went wrong. Please try again.", false); })
+          .finally(function () { btn.disabled = false; btn.textContent = label; });
+      });
+    })();
   </script>
 </body>
 </html>
