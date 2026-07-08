@@ -32,10 +32,8 @@ const WAYS: { color: string; title: string; body: string; to: string; cta: strin
 const QUESTIONS: string[] = [
   "Your brain is only 2% of your body weight but uses about 20% of your energy. Why might such a small organ be so expensive to run?",
   "Scientists have completely mapped a fly's brain (139,255 neurons) but not a mouse's or a human's. Why do you think a bigger brain is so much harder to map?",
-  "A single neuron can connect to thousands of others. How does that help explain how brains do so much with their cells?",
   "The wiring in one human brain would stretch about 2 million km. What does a number that big actually mean to you? How could you picture it?",
-  "Neurons never touch, they signal across a tiny gap. Why might it matter that the brain passes messages with gaps instead of solid connections?",
-  "What is one thing on this site that surprised you, and what new question does it make you want to ask?",
+  "What is one thing about the brain that surprises you? What question do you want to ask about the brain?",
 ];
 
 export default function Teach() {
@@ -128,14 +126,56 @@ export default function Teach() {
           ))}
         </section>
 
+        {/* FlyWire Academy — for older students */}
+        <section
+          className="mt-12 rounded-2xl p-6 sm:p-7 print:border print:border-black/15"
+          style={{ background: "rgba(255,200,97,0.06)", border: "1px solid rgba(255,200,97,0.25)" }}
+        >
+          <p className="mb-1 text-[11px] uppercase tracking-[0.28em]" style={{ color: FLY }}>
+            High school &amp; college
+          </p>
+          <h2 className="font-display text-2xl font-light print:text-black">Going deeper: FlyWire Academy</h2>
+          <p className="mt-2 max-w-2xl leading-relaxed text-white/70 print:text-black/70">
+            Teaching older students? The FlyWire team publishes free, ready-to-run lesson plans built on the real fly
+            connectome, designed for AP and IB Biology, AP Psychology, and introductory neuroscience at the high school
+            and college level. Use a full lesson over one or two class days, or drop pieces into your own.
+          </p>
+          <a
+            href="https://flywire.ai/academy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-block text-sm underline decoration-white/25 transition hover:text-white print:hidden"
+            style={{ color: FLY }}
+          >
+            Visit FlyWire Academy →
+          </a>
+        </section>
+
         {/* Sources note */}
-        <section className="mt-12 rounded-2xl glass p-6 print:border print:border-black/15 print:bg-white">
+        <section className="mt-6 rounded-2xl glass p-6 print:border print:border-black/15 print:bg-white">
           <p className="text-[15px] leading-relaxed text-white/70 print:text-black/70">
             Want the sources behind every number? They are all laid out, with the math, on the{" "}
             <Link to="/citations" className="underline decoration-white/30 hover:text-white" style={{ color: HUMAN }}>
               citations page
             </Link>
-            . Built by Amy Sterling. Data from MICrONS, FlyWire, and neuroglancer.
+            . Data from MICrONS, FlyWire, and neuroglancer.
+          </p>
+        </section>
+
+        {/* Byline + contact — their own bottom row */}
+        <section className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-6 text-sm sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-white/60 print:text-black/70">Built by Amy Sterling, Princeton Neuroscience Institute.</p>
+          <p className="text-white/60 print:text-black/70">
+            <a
+              href="https://x.com/amyneurons"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition hover:text-white"
+              style={{ color: CYAN }}
+            >
+              @amyneurons
+            </a>{" "}
+            — drop me a message to let me know what you think.
           </p>
         </section>
       </div>

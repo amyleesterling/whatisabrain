@@ -69,6 +69,12 @@ export default function Quiz() {
   const q = QUESTIONS[i];
   const revealed = picked !== null;
 
+  // Share the finished score. Built from state so the number is baked into the text.
+  const shareUrl = "https://whatisabrain.com/museum/quiz";
+  const shareText = `I scored ${score}/${QUESTIONS.length} on the "What's a brain?" quiz. How well do you know your own brain?`;
+  const shareX = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+  const shareMail = `mailto:?subject=${encodeURIComponent("How well do you know your brain?")}&body=${encodeURIComponent(`${shareText}\n\n${shareUrl}`)}`;
+
   function choose(idx: number) {
     if (revealed) return;
     setPicked(idx);
@@ -205,7 +211,36 @@ export default function Quiz() {
             <p className="mx-auto mt-4 max-w-md leading-relaxed text-white/65">
               Every answer here is a real number from the brain. There is a lot more where these came from.
             </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
+
+            {/* Share */}
+            <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+              <span className="text-[11px] uppercase tracking-[0.28em] text-white/40">Share your score</span>
+              <a
+                href={shareX}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Share on X"
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-4 py-2 text-sm text-white/85 transition hover:bg-white/12"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M18.9 1.6h3.3l-7.2 8.2 8.5 11.2h-6.6l-5.2-6.8-6 6.8H1.1l7.7-8.8L.7 1.6h6.8l4.7 6.2 5.7-6.2Zm-1.2 18.1h1.8L6.4 3.4H4.5l13.2 16.3Z" />
+                </svg>
+                Post on X
+              </a>
+              <a
+                href={shareMail}
+                aria-label="Share by email"
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-4 py-2 text-sm text-white/85 transition hover:bg-white/12"
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="3" y="5" width="18" height="14" rx="2" />
+                  <path d="m3 7 9 6 9-6" />
+                </svg>
+                Email
+              </a>
+            </div>
+
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
               <button
                 onClick={restart}
                 className="rounded-full border border-white/15 bg-white/8 px-5 py-2.5 text-sm font-medium text-white/88 transition hover:bg-white/12"

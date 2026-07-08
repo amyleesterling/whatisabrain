@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import RealNeuronModel from "../components/RealNeuronModel";
+import BrainMorph from "../components/BrainMorph";
 import HubLogo from "../components/HubLogo";
 
 // The fly brain: the one whole-animal connectome we have finished. Figures are
@@ -214,6 +215,13 @@ export default function FlyStats() {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* Scale morph: fly -> mouse -> human, to scale. */}
+        <section className="mt-14">
+          <p className="mb-1 text-[11px] uppercase tracking-[0.28em] text-white/45">Three brains, to scale</p>
+          <h2 className="mb-5 font-display text-3xl font-light sm:text-4xl">From a speck to a handful</h2>
+          <BrainMorph />
         </section>
 
         {/* Close: back to the human numbers. */}
