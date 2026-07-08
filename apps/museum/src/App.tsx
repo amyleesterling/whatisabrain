@@ -16,6 +16,7 @@ import ScaleWall from "./pages/ScaleWall";
 import Citations from "./pages/Citations";
 import WallLaunch from "./pages/WallLaunch";
 import NavBar from "./components/NavBar";
+import { I18nProvider } from "./i18n";
 
 // Vite's BASE_URL is "/" in dev and "/inner_cosmos/" in production. React
 // Router wants the basename WITHOUT a trailing slash, so strip it.
@@ -23,8 +24,9 @@ const BASENAME = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 export default function App() {
   return (
-    <BrowserRouter basename={BASENAME}>
-      <NavBar />
+    <I18nProvider>
+      <BrowserRouter basename={BASENAME}>
+        <NavBar />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/meet" element={<Meet />} />
@@ -56,6 +58,7 @@ export default function App() {
         {/* Sources, calculations & credits (esp. the wiring estimate). */}
         <Route path="/citations" element={<Citations />} />
       </Routes>
-    </BrowserRouter>
+      </BrowserRouter>
+    </I18nProvider>
   );
 }
