@@ -8,7 +8,7 @@ import HubLogo from "./HubLogo";
 const SECTIONS = [
   { id: "numbers", label: "Numbers" },
   { id: "facts", label: "Facts" },
-  { id: "compare", label: "Mouse vs human" },
+  { id: "compare", label: "Fly, mouse, human" },
   { id: "units", label: "Ridiculous units" },
   { id: "sources", label: "Sources" },
 ];
