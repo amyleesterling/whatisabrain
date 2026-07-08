@@ -138,3 +138,38 @@ body.attract-mode header { display: none !important; }
 @keyframes attract-rotate-tip { 0%, 60%, 100% { transform: rotate(0deg); } 30% { transform: rotate(-90deg); } }
 .attract-rotate-dims { font-weight: 700; font-size: 1.3rem; color: #fff; margin: 1.4rem 0 0.6rem; letter-spacing: 0.01em; }
 .attract-rotate-sub { color: rgba(255,255,255,0.6); font-size: 0.95rem; line-height: 1.6; font-weight: 300; }
+
+/* Printable teacher's guide (/teach). On screen it's dark; "Print this guide"
+   must produce clean black-on-white on 1-2 pages, not dump the full dark
+   background. The page's inline radial-gradient beats Tailwind print: classes,
+   so force everything to B&W here (stylesheet !important beats inline). */
+@media print {
+  html, body, #root { background: #fff !important; }
+  @page { margin: 0.55in; }
+  .teach-page, .teach-page * {
+    background: transparent !important;
+    background-image: none !important;
+    color: #111 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+  }
+  .teach-page { background: #fff !important; padding: 0 !important; }
+  /* Cards become plain hairline boxes; kill glass/blur/gradients. */
+  .teach-page .glass,
+  .teach-page [class*="rounded-2xl"],
+  .teach-page [class*="rounded-xl"] {
+    border: 1px solid #cfcfcf !important;
+    background: #fff !important;
+    backdrop-filter: none !important;
+  }
+  /* Compress to fit ~2 pages. */
+  .teach-page section { margin-top: 12px !important; }
+  .teach-page h1 { font-size: 22pt !important; line-height: 1.1 !important; margin: 0 !important; }
+  .teach-page h2 { font-size: 13pt !important; margin-bottom: 6px !important; }
+  .teach-page h3 { font-size: 11pt !important; }
+  .teach-page p, .teach-page li, .teach-page a, .teach-page span { font-size: 10pt !important; line-height: 1.4 !important; }
+  .teach-page [class*="rounded-2xl"], .teach-page [class*="rounded-xl"] { padding: 8px 10px !important; }
+  .teach-page ol > li { margin-bottom: 6px !important; }
+  a[href]::after { content: none !important; } /* no URL echoes */
+}

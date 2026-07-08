@@ -46,7 +46,7 @@ const STAGES = [
     eyebrow: "Stage 2 of 10",
     title: "Next to a mouse brain",
     subtitle:
-      "About 15 times smaller in every direction, roughly the volume of a peanut. Inside that peanut: 70 million neurons, connected by ~200 billion synapses. Mice are a key model organism, helping scientists uncover the principles that also shape the human brain. Drag to look around.",
+      "About 15 times smaller in every direction, roughly the size of a peanut, yet packed with 70 million neurons and ~200 billion synapses. The same basic wiring as ours, which is why mice help us understand the human brain. Drag to look around.",
   },
   {
     eyebrow: "Stage 3 of 10",
@@ -70,13 +70,13 @@ const STAGES = [
     eyebrow: "Stage 6 of 10",
     title: "A neuron",
     subtitle:
-      "One cell. Thousands of connections. The upper branches, called dendrites, receive signals. The cell sends its own signals out through its axon, making synapses with other cells, which connect to more cells. Thus a neural network is born, representing reality and experience.",
+      "One cell, thousands of connections. Its branches, the dendrites, take signals in; its axon sends them out to other cells. Wire millions together and you get a network that holds thought and memory.",
   },
   {
     eyebrow: "Stage 7 of 10",
     title: "One synapse",
     subtitle:
-      "An axon from a cell somewhere far away in the brain reaches up to form a synapse. It connects with the blue cell, a tufted pyramidal neuron that lives deep in cortex. The blue cell is excitatory: when it sends a signal out its own axon, it will encourage downstream cells to send their signals too.",
+      "An axon reaches in from far away to touch the blue cell, a pyramidal neuron deep in the cortex. Where they meet is a synapse. The blue cell is excitatory: its signal urges the next cells to fire too.",
   },
   {
     eyebrow: "Stage 8 of 10",

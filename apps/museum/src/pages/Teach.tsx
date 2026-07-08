@@ -39,7 +39,7 @@ const QUESTIONS: string[] = [
 export default function Teach() {
   return (
     <div
-      className="min-h-screen w-full text-white print:bg-white print:text-black"
+      className="teach-page min-h-screen w-full text-white"
       style={{ background: "radial-gradient(ellipse at 50% 0%, #101a2e 0%, #04060c 62%)" }}
     >
       <div className="sticky top-0 z-40 border-b border-white/8 bg-[#04060c]/72 backdrop-blur-xl print:hidden">

@@ -54,7 +54,7 @@ const KG_STAGES: KgStage[] = [
   {
     zoom: 7,
     text: "Action potential!",
-    subtitle: "The language of neurons, an electrical impulse that travels down a branch to zing other cells.",
+    subtitle: "An electrical zap that races down a branch to spark the next cell.",
   },
   // Same scene, different beat — the AP keeps firing in the background
   // while the kid lands on the wow-stat that gives it scale.
@@ -540,7 +540,9 @@ function Caption({
         right: 0,
         // dvh keeps the caption fixed against the actual visible viewport
         // on iOS Safari instead of jumping when the URL bar shows/hides.
-        bottom: "12dvh",
+        // 16dvh (not 12) keeps the 2-line captions clear of the bottom-right
+        // ZapButton, which tops out around 100px above the bottom edge.
+        bottom: "16dvh",
         display: "grid",
         placeItems: "center",
         zIndex: 200,
