@@ -23,12 +23,12 @@ const FLY_STORIES: { hl: string; title: string; body: string; link?: { to: strin
   {
     hl: "A first",
     title: "A whole brain, finished",
-    body: "In 2024 scientists finished tracing every neuron and every connection in this brain. It is the first complete wiring diagram of any animal that can walk, see, and remember, and by a wide margin the largest connectome ever mapped.",
+    body: "In 2024 scientists finished tracing every neuron and every connection in this brain. It is the first complete wiring diagram of any animal that moves through the world and learns, and by a wide margin the largest connectome ever mapped.",
   },
   {
     hl: "617,000x",
-    title: "A speck of you",
-    body: "Your brain has roughly 617,000 times as many neurons. All 139,255 of the fly's would fit inside a crumb of your cortex smaller than a grain of rice, and we still have not mapped that crumb.",
+    title: "A speck that flies",
+    body: "Your brain has roughly 617,000 times as many neurons. All 139,255 of the fly's would fit inside a crumb of your cortex smaller than a grain of rice. Yet that crumb is a whole animal: it flies, navigates, learns, forms memories, and even chooses a mate.",
     link: { to: "/stats", label: "See the human numbers" },
   },
   {
@@ -37,9 +37,9 @@ const FLY_STORIES: { hl: string; title: string; body: string; link?: { to: strin
     body: "Mapping this one brain more than doubled the known catalog of fly neuron types. More than half the 8,453 cell types found here had never been described by science before.",
   },
   {
-    hl: "< 1 mm",
-    title: "Small and mighty",
-    body: "The whole thing is narrower than a poppy seed, yet it flies, courts, learns smells, keeps its balance, and navigates the world. Every one of those behaviors is somewhere in this wiring.",
+    hl: "Why a fly?",
+    title: "A key to bigger brains",
+    body: "A fly runs on the same parts we do: neurons, synapses, the same neurotransmitters. Having one brain mapped in full gives scientists a place to learn how wiring becomes behavior, and the tools built here are now aimed at the mouse and, one day, us.",
   },
 ];
 
@@ -85,6 +85,7 @@ export default function FlyStats() {
                 spinSpeed={0.14}
                 zoom={false}
                 fit
+                flipVertical
                 className="absolute inset-0"
               />
             </div>

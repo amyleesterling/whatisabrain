@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import ReferenceTable from "../components/ReferenceTable";
@@ -7,10 +7,10 @@ import LandmarkMetrics from "../components/LandmarkMetrics";
 import RealNeuronModel from "../components/RealNeuronModel";
 import FactIcon, { type FactIconId } from "../components/FactIcon";
 import StatsTopBar from "../components/StatsTopBar";
-import type { ScaleTestImageId } from "../data/scaleTestImageQueue";
 
 const MOUSE = "#7ee0ff";
 const HUMAN = "#b78bff";
+const FLY = "#ffc861";
 
 // Top-line facts about the human brain, shown above the fold beside the 3D
 // model. Figures match /citations (volume/weight are standard adult averages;
@@ -59,197 +59,106 @@ const MORE_FACTS: { hl: string; title: string; body: string; icon: FactIconId; l
   },
 ];
 
-type Row = {
-  key: string;
-  label: string;
-  mouse: { value: number; display: string; anchor: string };
-  human: { value: number; display: string; anchor: string };
-  ratio: string;
-  unit?: "km";
-  imageId: ScaleTestImageId;
-  imageCaption: string;
-};
-
-const ROWS: Row[] = [
+const COMPARE: {
+  metric: string;
+  note: string;
+  rows: { who: string; color: string; value: number; display: string; anchor: string }[];
+}[] = [
   {
-    key: "neurons",
-    label: "Neurons",
-    mouse: {
-      value: 70e6,
-      display: "70 million",
-      anchor: "About the number of people living in France.",
-    },
-    human: {
-      value: 86e9,
-      display: "86 billion",
-      anchor: "More than ten times everyone alive on Earth.",
-    },
-    ratio: "~1,200x more",
-    imageId: "neurons-cloud-comparison",
-    imageCaption:
-      "The count reads best as a small cyan cloud beside a violet galaxy that keeps expanding out of the frame.",
+    metric: "Neurons",
+    note: "Each brain up the ladder holds very roughly a thousand times more than the last.",
+    rows: [
+      { who: "Fly", color: FLY, value: 139255, display: "139,255", anchor: "a whole animal, in one speck" },
+      { who: "Mouse", color: MOUSE, value: 70e6, display: "70 million", anchor: "about the population of France" },
+      { who: "Human", color: HUMAN, value: 86e9, display: "86 billion", anchor: "more than ten Earths of people" },
+    ],
   },
   {
-    key: "synapses",
-    label: "Synapses",
-    mouse: {
-      value: 250e9,
-      display: "~250 billion",
-      anchor: "About 8,000 years to count them, one per second.",
-    },
-    human: {
-      value: 100e12,
-      display: "100 trillion",
-      anchor: "About 3 million years to count them, one per second.",
-    },
-    ratio: "~400x more",
-    imageId: "synapse-city-lights",
-    imageCaption:
-      "Synapses feel less like beads on a chart and more like an electric city horizon that never ends.",
-  },
-  {
-    key: "wire",
-    label: "Wiring, all axon",
-    unit: "km",
-    mouse: {
-      value: 2000,
-      display: "~2,000 km",
-      anchor: "Enough living thread to stretch across a continent.",
-    },
-    human: {
-      value: 2_000_000,
-      display: "~2 million km",
-      anchor: "Enough to circle the Earth again and again as living thread.",
-    },
-    ratio: "~1,000x more",
-    imageId: "boston-to-miami-axon",
-    imageCaption:
-      "The mouse version stays graspable as one glowing cyan path running down the eastern seaboard.",
+    metric: "Synapses",
+    note: "The connections explode even faster than the cells that make them.",
+    rows: [
+      { who: "Fly", color: FLY, value: 54.5e6, display: "~54.5 million", anchor: "every one now mapped" },
+      { who: "Mouse", color: MOUSE, value: 250e9, display: "~250 billion", anchor: "~8,000 years to count" },
+      { who: "Human", color: HUMAN, value: 100e12, display: "~100 trillion", anchor: "~3 million years to count" },
+    ],
   },
 ];
 
-function useCountUp(target: number, run: boolean, ms = 1700) {
-  const [value, setValue] = useState(0);
-  const startedRef = useRef(false);
-
-  useEffect(() => {
-    if (!run || startedRef.current) return;
-    startedRef.current = true;
-
-    let frame = 0;
-    let start = 0;
-
-    const tick = (now: number) => {
-      if (!start) start = now;
-      const progress = Math.min(1, (now - start) / ms);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setValue(target * eased);
-      if (progress < 1) frame = requestAnimationFrame(tick);
-    };
-
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [ms, run, target]);
-
-  return value;
-}
-
-function compact(value: number, unit?: "km") {
-  if (unit === "km") return `${Math.round(value).toLocaleString()} km`;
-  if (value >= 1e12) return `${+(value / 1e12).toFixed(value < 1e13 ? 1 : 0)} trillion`;
-  if (value >= 1e9) return `${Math.round(value / 1e9)} billion`;
-  if (value >= 1e6) return `${Math.round(value / 1e6)} million`;
-  return Math.round(value).toLocaleString();
-}
-
-function ScaleSpheres({ ratio, run }: { ratio: number; run: boolean }) {
-  const humanDiameter = 104;
-  const mouseDiameter = Math.max(9, humanDiameter / Math.cbrt(ratio));
-  const humanRadius = humanDiameter / 2;
-  const mouseRadius = mouseDiameter / 2;
-  const baseY = 132;
-  const humanCx = 138;
-  const mouseCx = humanCx - humanRadius - 20 - mouseRadius;
-
-  const sphere = (cx: number, cy: number, radius: number, id: string, glow: string, delay: number) => (
-    <motion.circle
-      cx={cx}
-      cy={cy}
-      r={radius}
-      fill={`url(#${id})`}
-      initial={{ scale: 0, opacity: 0 }}
-      animate={run ? { scale: 1, opacity: 1 } : {}}
-      transition={{ duration: 0.85, delay, ease: [0.16, 1, 0.3, 1] }}
-      style={{ transformOrigin: `${cx}px ${cy}px`, filter: `drop-shadow(0 0 9px ${glow})` }}
-    />
-  );
-
+function CompareBar({
+  row,
+  metricMax,
+  run,
+  delay,
+}: {
+  row: { who: string; color: string; value: number; display: string; anchor: string };
+  metricMax: number;
+  run: boolean;
+  delay: number;
+}) {
+  // Log scale: a linear bar would render the fly as a single invisible pixel
+  // beside the human. Log keeps all three legible; the footnote owns the honesty.
+  const pct = Math.max(7, (Math.log10(row.value) / Math.log10(metricMax)) * 100);
   return (
-    <svg viewBox="0 0 200 150" className="mx-auto w-full max-w-[220px]" aria-hidden="true">
-      <defs>
-        <radialGradient id="scaleMouseSphere" cx="38%" cy="32%" r="72%">
-          <stop offset="0%" stopColor="#dcf6ff" />
-          <stop offset="45%" stopColor={MOUSE} />
-          <stop offset="100%" stopColor="#286a85" />
-        </radialGradient>
-        <radialGradient id="scaleHumanSphere" cx="38%" cy="32%" r="72%">
-          <stop offset="0%" stopColor="#e9e0ff" />
-          <stop offset="45%" stopColor={HUMAN} />
-          <stop offset="100%" stopColor="#523f95" />
-        </radialGradient>
-      </defs>
-      <line x1="10" y1={baseY} x2="190" y2={baseY} stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
-      {sphere(mouseCx, baseY - mouseRadius, mouseRadius, "scaleMouseSphere", `${MOUSE}88`, 0.5)}
-      {sphere(humanCx, baseY - humanRadius, humanRadius, "scaleHumanSphere", `${HUMAN}88`, 0.35)}
-    </svg>
-  );
-}
-
-function Stat({ row, run }: { row: Row; run: boolean }) {
-  const mouseValue = useCountUp(row.mouse.value, run);
-  const humanValue = useCountUp(row.human.value, run);
-  const ratio = row.human.value / row.mouse.value;
-  const widthRatio = Math.round(Math.cbrt(ratio));
-
-  return (
-    <div className="rounded-[1.75rem] glass p-7 sm:p-8">
-      <div className="flex flex-wrap items-baseline gap-4">
-        <h3 className="font-display text-2xl font-light sm:text-3xl">{row.label}</h3>
-      </div>
-
-      <div className="mt-6">
-        <div className="rounded-[1.5rem] border border-white/8 bg-white/[0.025] p-5 sm:p-6">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-8">
-            <div className="min-w-0 flex-1">
-              {[
-                { who: "Mouse brain", color: MOUSE, live: mouseValue, spec: row.mouse },
-                { who: "Human brain", color: HUMAN, live: humanValue, spec: row.human },
-              ].map((entry) => (
-                <div key={entry.who} className="mb-4 last:mb-0">
-                  <div className="flex items-baseline justify-between gap-3">
-                    <span className="text-[11px] uppercase tracking-[0.28em] text-white/45">{entry.who}</span>
-                    <span
-                      className="font-display tabular-nums"
-                      style={{ color: entry.color, fontSize: "clamp(1.2rem,2vw,1.7rem)" }}
-                    >
-                      {compact(entry.live, row.unit)}
-                    </span>
-                  </div>
-                  <p className="mt-1 text-sm leading-relaxed text-white/58">{entry.spec.anchor}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="w-full shrink-0 sm:w-auto">
-              <ScaleSpheres ratio={ratio} run={run} />
-              <p className="mx-auto mt-1 max-w-[220px] text-center text-[11px] leading-snug text-white/40">
-                Volume scaling keeps both spheres visible. The human is only about {widthRatio}x wider, but it still
-                stands for {row.ratio.replace(" more", "")} the amount.
-              </p>
-            </div>
-          </div>
+    <div className="flex items-center gap-3">
+      <span className="w-12 shrink-0 text-[11px] uppercase tracking-[0.18em]" style={{ color: row.color }}>
+        {row.who}
+      </span>
+      <div className="relative h-9 flex-1 overflow-hidden rounded-lg bg-white/[0.04]">
+        <motion.div
+          className="absolute inset-y-0 left-0 rounded-lg"
+          style={{ background: `linear-gradient(90deg, ${row.color}44, ${row.color}cc)` }}
+          initial={{ width: 0 }}
+          animate={run ? { width: `${pct}%` } : {}}
+          transition={{ duration: 1.1, delay, ease: [0.16, 1, 0.3, 1] }}
+        />
+        <div className="absolute inset-0 flex items-center justify-between gap-2 px-3">
+          <span className="font-display tabular-nums text-sm text-white sm:text-base">{row.display}</span>
+          <span className="hidden text-[11px] text-white/55 sm:block">{row.anchor}</span>
         </div>
       </div>
+    </div>
+  );
+}
+
+function BrainCompare({ run }: { run: boolean }) {
+  return (
+    <div className="rounded-[1.75rem] glass p-7 sm:p-8">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <h3 className="font-display text-2xl font-light sm:text-3xl">Fly, mouse, human</h3>
+        <div className="flex items-center gap-4">
+          {[
+            { c: FLY, l: "Fly" },
+            { c: MOUSE, l: "Mouse" },
+            { c: HUMAN, l: "Human" },
+          ].map((x) => (
+            <span key={x.l} className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.16em] text-white/55">
+              <span className="h-2 w-2 rounded-full" style={{ background: x.c, boxShadow: `0 0 8px ${x.c}` }} />
+              {x.l}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {COMPARE.map((m) => {
+        const metricMax = Math.max(...m.rows.map((r) => r.value));
+        return (
+          <div key={m.metric} className="mb-7 last:mb-2">
+            <h4 className="mb-3 font-display text-lg font-light text-white/90">{m.metric}</h4>
+            <div className="grid gap-2.5">
+              {m.rows.map((r, i) => (
+                <CompareBar key={r.who} row={r} metricMax={metricMax} run={run} delay={0.15 * i} />
+              ))}
+            </div>
+            <p className="mt-2.5 text-xs leading-relaxed text-white/45">{m.note}</p>
+          </div>
+        );
+      })}
+
+      <p className="mt-4 border-t border-white/8 pt-4 text-[12px] leading-relaxed text-white/45">
+        The bars sit on a log scale, so the brains look close together. They are not: every step up is a jump of
+        hundreds to thousands of times. The entire fly brain, mapped wire for wire, holds fewer neurons than a
+        grain-of-rice crumb of your cortex, and that crumb-sized brain still flies, learns, and finds a mate.
+      </p>
     </div>
   );
 }
@@ -440,10 +349,8 @@ export default function ScaleTest() {
           <NeuronIcon run={run} />
         </section>
 
-        <section id="compare" className="mt-12 grid gap-5">
-          {ROWS.map((row) => (
-            <Stat key={row.key} row={row} run={run} />
-          ))}
+        <section id="compare" className="mt-12">
+          <BrainCompare run={run} />
         </section>
 
         <section className="mt-12">

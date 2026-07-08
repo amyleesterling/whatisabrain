@@ -23,6 +23,9 @@ interface Props {
    *  regardless of the mesh's native coordinate units. Needed for meshes that
    *  aren't pre-normalized (e.g. the FlyWire brain in raw microns). */
   fit?: boolean;
+  /** Flip the model upside-down. The raw FlyWire brain ships Y-down (image
+   *  coordinates), so it loads inverted; this rights it. */
+  flipVertical?: boolean;
 }
 
 // Tiny shared GLTFLoader — one instance per page is fine, three handles it.
@@ -39,6 +42,7 @@ export default function RealNeuronModel({
   interactive = true,
   zoom = true,
   fit = false,
+  flipVertical = false,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [loaded, setLoaded] = useState(false);
@@ -184,8 +188,9 @@ export default function RealNeuronModel({
           cellGroup.scale.setScalar(1.6 / maxDim);
         }
 
-        // Tilt slightly so we read 3D depth from the start
-        cellGroup.rotation.x = -0.08;
+        // Tilt slightly so we read 3D depth from the start. flipVertical adds a
+        // 180° pitch to right meshes that ship upside-down (e.g. FlyWire).
+        cellGroup.rotation.x = flipVertical ? Math.PI - 0.12 : -0.08;
 
         scene.add(cellGroup);
         setLoaded(true);
