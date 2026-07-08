@@ -123,19 +123,24 @@ function CompareBar({ row, metricMax, run, delay }: { row: CmpRow; metricMax: nu
         ))}
         {hasVal && (
           <>
-            <motion.div
-              className="absolute left-0 top-1/2 h-px -translate-y-1/2"
-              style={{ background: `linear-gradient(90deg, ${row.color}00, ${row.color})`, boxShadow: `0 0 6px ${row.color}` }}
-              initial={{ width: 0 }}
-              animate={run ? { width: `${pct}%` } : {}}
-              transition={{ duration: 1.4, delay, ease: [0.16, 1, 0.3, 1] }}
+            <div
+              className="absolute left-0 top-1/2 h-px -translate-y-1/2 ease-out"
+              style={{
+                width: run ? `${pct}%` : "0%",
+                background: `linear-gradient(90deg, ${row.color}00, ${row.color})`,
+                boxShadow: `0 0 6px ${row.color}`,
+                transition: `width 1400ms cubic-bezier(0.16,1,0.3,1) ${delay}s`,
+              }}
             />
-            <motion.div
+            <div
               className="absolute top-1/2 h-[6px] w-[6px] -translate-x-1/2 -translate-y-1/2 rounded-full"
-              style={{ background: row.color, boxShadow: `0 0 10px ${row.color}, 0 0 3px #fff` }}
-              initial={{ left: 0, opacity: 0 }}
-              animate={run ? { left: `${pct}%`, opacity: 1 } : {}}
-              transition={{ duration: 1.4, delay, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                left: run ? `${pct}%` : "0%",
+                opacity: run ? 1 : 0,
+                background: row.color,
+                boxShadow: `0 0 10px ${row.color}, 0 0 3px #fff`,
+                transition: `left 1400ms cubic-bezier(0.16,1,0.3,1) ${delay}s, opacity 600ms ${delay}s`,
+              }}
             />
           </>
         )}
