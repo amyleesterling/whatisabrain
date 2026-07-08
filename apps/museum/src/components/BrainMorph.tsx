@@ -133,19 +133,27 @@ export default function BrainMorph() {
       );
     });
 
+    // Show exactly ONE brain at a time: when the selection changes, fade the
+    // outgoing brain fully out before the incoming one fades in. Crossfading
+    // translucent meshes of different sizes just looks muddy.
+    let displayed = 0;
     const animate = () => {
       const t = performance.now() / 1000;
+      const act = activeRef.current;
+      if (displayed !== act) {
+        const cur = entries[displayed];
+        if (!cur || cur.fade < 0.04) displayed = act;
+      }
       entries.forEach((e, idx) => {
         if (!e) return;
-        const target = idx === activeRef.current ? 1 : 0;
-        e.fade += (target - e.fade) * 0.08;
-        e.group.visible = e.fade > 0.01;
+        const target = idx === displayed && displayed === act ? 1 : 0;
+        e.fade += (target - e.fade) * 0.16;
+        e.group.visible = e.fade > 0.02;
         for (const m of e.mats) {
           const base = (m as THREE.MeshBasicMaterial).wireframe ? 0.14 : 0.92;
-          (m as THREE.Material as THREE.MeshStandardMaterial).opacity = base * e.fade;
+          m.opacity = base * e.fade;
         }
-        // Only spin the active one; keep others still so the crossfade is calm.
-        if (idx === activeRef.current) e.group.rotation.y = t * 0.16;
+        if (idx === displayed) e.group.rotation.y = t * 0.16;
       });
       renderer.render(scene, camera);
       frameId = requestAnimationFrame(animate);
