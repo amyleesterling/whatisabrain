@@ -91,10 +91,16 @@ const QUESTIONS_2: Q[] = [
 // Level 3: expert. Real neuroscience, not just big numbers.
 const QUESTIONS_3: Q[] = [
   {
-    question: "The whole human brain runs on about how much power?",
-    options: ["~2 watts", "~20 watts", "~200 watts"],
-    answer: 1,
-    payoff: "About 20 watts, less than a dim lightbulb, yet it outthinks any computer at what it does.",
+    question: "What part of a neuron receives signals?",
+    options: ["The dendrites", "The axon", "The soma"],
+    answer: 0,
+    payoff: "The dendrites, the bushy branches that gather signals in from thousands of other cells.",
+  },
+  {
+    question: "What part of a neuron sends its signal out?",
+    options: ["The axon", "The dendrites", "The nucleus"],
+    answer: 0,
+    payoff: "The axon, the long fiber that carries the cell's own signal out to the next neurons.",
   },
   {
     question: "What is the resting voltage across a neuron's membrane?",
@@ -113,13 +119,6 @@ const QUESTIONS_3: Q[] = [
     options: ["~100", "~1,000", "~10,000"],
     answer: 2,
     payoff: "Up to roughly 10,000. Multiply by 86 billion neurons and you reach ~100 trillion synapses.",
-  },
-  {
-    question: "MICrONS mapped one cubic millimeter of mouse cortex. How many synapses were inside?",
-    options: ["~5 million", "~50 million", "~500 million"],
-    answer: 2,
-    payoff: "About 523 million synapses, wiring together roughly 200,000 cells, in a speck the size of a grain of sand.",
-    link: { to: "/stats", label: "See the numbers" },
   },
 ];
 
