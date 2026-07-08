@@ -211,7 +211,7 @@ export default function Quiz() {
           /* Score screen */
           <div className="text-center">
             <p className="mb-3 text-[11px] uppercase tracking-[0.32em] text-white/45">
-              {levelName ? `${levelName} ${t("quiz.score.label.suffix")}` : t("quiz.score.label")}
+              {levelName ? t("quiz.score.mode", { mode: levelName }) : t("quiz.score.label")}
             </p>
             <p className="font-display font-light leading-none" style={{ color: HUMAN, fontSize: "clamp(3.5rem,12vw,7rem)" }}>
               {score}<span className="text-white/30">/{questions.length}</span>

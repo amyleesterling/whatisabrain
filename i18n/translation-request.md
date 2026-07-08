@@ -1,25 +1,33 @@
-# Translation request: "What's a brain?" (whatisabrain.com) → Simplified Chinese
+# Translation request: "What's a brain?" (whatisabrain.com)
+
+## TARGET LANGUAGE: _________________________
+Fill in the language you want, e.g. "Simplified Chinese (简体中文)",
+"Brazilian Portuguese (Português do Brasil)", or "French (Français)". Translate
+everything below into that language.
 
 You are translating a free, wonder-driven neuroscience website for classrooms and
-curious people. Translate every English string below into natural, warm
-**Simplified Chinese (简体中文)**.
+curious people. Translate every English string below into natural, warm prose in
+the **target language above**.
 
 ## Rules
 1. Translate meaning and tone, not word-for-word. Keep the sense of wonder and
-   warmth. Keep it concise so it fits in UI: the Chinese should be about the same
-   length or shorter than the English.
+   warmth. Keep it concise so it fits in UI: about the same length or shorter than
+   the English.
 2. Leave these UNTRANSLATED (keep in Latin script): FlyWire, MICrONS, neuroglancer,
    Allen Institute, Drosophila, C. elegans, MRI, the handle @amyneurons, the name
-   Amy Sterling, and "Princeton Neuroscience Institute" (a one-time Chinese gloss in
-   parentheses is fine).
+   Amy Sterling, and "Princeton Neuroscience Institute" (a one-time local-language
+   gloss in parentheses is fine).
 3. Keep every number, unit, and symbol exact (%, nm, mm, µm, m/s, mph, kg, L, km,
-   watts, mV, °). Use 亿 / 万 where natural (e.g. 86 billion → 860 亿; ~2 million km
-   → 约 200 万公里) but never change a scientific unit.
+   watts, mV, °). Use the target language's own large-number conventions where
+   natural (e.g. Chinese 86 billion → 860 亿) but never change a scientific unit.
 4. Keep the SAME format: one line per entry, preserve each `[key]` exactly, then the
-   Chinese after it. Do not drop, merge, reorder, or renumber keys.
-5. Brand name "What's a brain?" → a catchy title, suggested 「大脑是什么？」, used
-   consistently everywhere it appears.
-6. No commentary. Output only the translated `[key] 中文` lines.
+   translation after it. Do not drop, merge, reorder, or renumber keys. Any
+   placeholder in braces — `{n}`, `{total}`, `{score}`, `{mode}` — MUST be left
+   verbatim in the translated string.
+5. Brand name "What's a brain?" → a catchy title in the target language, used
+   consistently everywhere (e.g. Chinese 「大脑是什么？」, Portuguese "O que é um
+   cérebro?").
+6. No commentary. Output only the translated `[key] <translation>` lines.
 
 Return the full translated list, all sections.
 
@@ -296,7 +304,7 @@ Return the full translated list, all sections.
 [quiz.reveal.correct] Correct.
 [quiz.reveal.wrong] Not quite.
 [quiz.score.label] Your score
-[quiz.score.label.mode] {mode} score   (keep {mode})
+[quiz.score.mode] {mode} score   (keep {mode})
 [quiz.title.perfect] Big brain energy
 [quiz.title.good] Nicely wired
 [quiz.title.mid] Warming up those synapses
@@ -310,6 +318,7 @@ Return the full translated list, all sections.
 [quiz.share.x] Post on X
 [quiz.share.email] Email
 [quiz.share.text] I scored {score}/{total} on the "What's a brain?" quiz{mode}. How well do you know your own brain?
+[quiz.share.subject] How well do you know your brain?
 [quiz.playagain] Play again
 # Level 1
 [quiz.l1.q1] How many neurons are in a human brain?
@@ -432,3 +441,4 @@ Return the full translated list, all sections.
 ## SITE-WIDE
 [site.brand] What's a brain?
 [site.home.aria] What's a brain? — home
+[site.lang.request] Request a language

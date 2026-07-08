@@ -8,8 +8,7 @@ export const en = {
   // --- site-wide ---
   "site.brand": "What's a brain?",
   "site.home.aria": "What's a brain? — home",
-  "site.lang.en": "EN",
-  "site.lang.zh": "中文",
+  "site.lang.request": "Request a language",
 
   // --- quiz ---
   "quiz.topbar.stats": "Brain stats →",
@@ -21,7 +20,7 @@ export const en = {
   "quiz.reveal.correct": "Correct.",
   "quiz.reveal.wrong": "Not quite.",
   "quiz.score.label": "Your score",
-  "quiz.score.label.suffix": "score",
+  "quiz.score.mode": "{mode} score",
   "quiz.title.perfect": "Big brain energy",
   "quiz.title.good": "Nicely wired",
   "quiz.title.mid": "Warming up those synapses",

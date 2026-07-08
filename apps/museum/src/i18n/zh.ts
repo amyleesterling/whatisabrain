@@ -11,8 +11,7 @@ export const zh: Partial<Record<StringKey, string>> = {
   // --- site-wide (seeded) ---
   "site.brand": "大脑是什么？",
   "site.home.aria": "大脑是什么？— 首页",
-  "site.lang.en": "EN",
-  "site.lang.zh": "中文",
+  "site.lang.request": "申请新语言",
 
   // --- quiz chrome (seeded) ---
   "quiz.topbar.stats": "大脑数据 →",
@@ -24,7 +23,7 @@ export const zh: Partial<Record<StringKey, string>> = {
   "quiz.reveal.correct": "答对了。",
   "quiz.reveal.wrong": "还差一点。",
   "quiz.score.label": "你的得分",
-  "quiz.score.label.suffix": "得分",
+  "quiz.score.mode": "{mode}得分",
   "quiz.title.perfect": "大脑火力全开",
   "quiz.title.good": "脑回路清晰",
   "quiz.title.mid": "突触正在预热",
