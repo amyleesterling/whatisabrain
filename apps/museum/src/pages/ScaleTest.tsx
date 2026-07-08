@@ -10,7 +10,12 @@ import StatsTopBar from "../components/StatsTopBar";
 
 const MOUSE = "#7ee0ff";
 const HUMAN = "#b78bff";
-const FLY = "#ffc861";
+
+// Comparison-panel palette (per Amy): human yellow, mouse blue, fly purple.
+// Kept separate from the page's human=violet identity used elsewhere.
+const CMP_HUMAN = "#ffd23f";
+const CMP_MOUSE = "#5aa9ff";
+const CMP_FLY = "#b884ff";
 
 // Top-line facts about the human brain, shown above the fold beside the 3D
 // model. Figures match /citations (volume/weight are standard adult averages;
@@ -59,62 +64,91 @@ const MORE_FACTS: { hl: string; title: string; body: string; icon: FactIconId; l
   },
 ];
 
-const COMPARE: {
-  metric: string;
-  note: string;
-  rows: { who: string; color: string; value: number; display: string; anchor: string }[];
-}[] = [
+type CmpRow = { who: string; color: string; value: number | null; display: string; anchor: string };
+
+const COMPARE: { metric: string; note: string; rows: CmpRow[] }[] = [
   {
     metric: "Neurons",
     note: "Each brain up the ladder holds very roughly a thousand times more than the last.",
     rows: [
-      { who: "Fly", color: FLY, value: 139255, display: "139,255", anchor: "a whole animal, in one speck" },
-      { who: "Mouse", color: MOUSE, value: 70e6, display: "70 million", anchor: "about the population of France" },
-      { who: "Human", color: HUMAN, value: 86e9, display: "86 billion", anchor: "more than ten Earths of people" },
+      { who: "Fly", color: CMP_FLY, value: 139255, display: "139,255", anchor: "a whole animal, in one speck" },
+      { who: "Mouse", color: CMP_MOUSE, value: 70e6, display: "70 million", anchor: "about the population of France" },
+      { who: "Human", color: CMP_HUMAN, value: 86e9, display: "86 billion", anchor: "more than ten Earths of people" },
     ],
   },
   {
     metric: "Synapses",
     note: "The connections explode even faster than the cells that make them.",
     rows: [
-      { who: "Fly", color: FLY, value: 54.5e6, display: "~54.5 million", anchor: "every one now mapped" },
-      { who: "Mouse", color: MOUSE, value: 250e9, display: "~250 billion", anchor: "~8,000 years to count" },
-      { who: "Human", color: HUMAN, value: 100e12, display: "~100 trillion", anchor: "~3 million years to count" },
+      { who: "Fly", color: CMP_FLY, value: 54.5e6, display: "~54.5 million", anchor: "every one now mapped" },
+      { who: "Mouse", color: CMP_MOUSE, value: 250e9, display: "~250 billion", anchor: "~8,000 years to count" },
+      { who: "Human", color: CMP_HUMAN, value: 100e12, display: "~100 trillion", anchor: "~3 million years to count" },
+    ],
+  },
+  {
+    metric: "Wiring, laid end to end",
+    note: "Only the human and mouse have been measured; the fly brain is under a millimeter across.",
+    rows: [
+      { who: "Fly", color: CMP_FLY, value: null, display: "not measured", anchor: "brain under 1 mm" },
+      { who: "Mouse", color: CMP_MOUSE, value: 2000, display: "~2,000 km", anchor: "across a continent" },
+      { who: "Human", color: CMP_HUMAN, value: 2_000_000, display: "~2 million km", anchor: "the Earth ~50 times over" },
     ],
   },
 ];
 
-function CompareBar({
-  row,
-  metricMax,
-  run,
-  delay,
-}: {
-  row: { who: string; color: string; value: number; display: string; anchor: string };
-  metricMax: number;
-  run: boolean;
-  delay: number;
-}) {
-  // Log scale: a linear bar would render the fly as a single invisible pixel
-  // beside the human. Log keeps all three legible; the footnote owns the honesty.
-  const pct = Math.max(7, (Math.log10(row.value) / Math.log10(metricMax)) * 100);
+// One measurement line: a thin holographic track with a glowing node at the
+// value's TRUE (linear) position, so the fly and mouse genuinely shrink to
+// specks against the human. Sci-fi readout, not a chunky bar.
+function CompareBar({ row, metricMax, run, delay }: { row: CmpRow; metricMax: number; run: boolean; delay: number }) {
+  const hasVal = row.value != null;
+  const raw = hasVal ? (row.value! / metricMax) * 100 : 0;
+  const pct = Math.min(100, Math.max(0.6, raw)); // keep the node off the very edge
+
   return (
-    <div className="flex items-center gap-3">
-      <span className="w-12 shrink-0 text-[11px] uppercase tracking-[0.18em]" style={{ color: row.color }}>
+    <div className="grid grid-cols-[2.4rem_1fr_6.5rem] items-center gap-2 sm:grid-cols-[2.8rem_1fr_8rem] sm:gap-3">
+      <span className="text-[10px] uppercase tracking-[0.18em]" style={{ color: row.color }}>
         {row.who}
       </span>
-      <div className="relative h-9 flex-1 overflow-hidden rounded-lg bg-white/[0.04]">
-        <motion.div
-          className="absolute inset-y-0 left-0 rounded-lg"
-          style={{ background: `linear-gradient(90deg, ${row.color}44, ${row.color}cc)` }}
-          initial={{ width: 0 }}
-          animate={run ? { width: `${pct}%` } : {}}
-          transition={{ duration: 1.1, delay, ease: [0.16, 1, 0.3, 1] }}
-        />
-        <div className="absolute inset-0 flex items-center justify-between gap-2 px-3">
-          <span className="font-display tabular-nums text-sm text-white sm:text-base">{row.display}</span>
-          <span className="hidden text-[11px] text-white/55 sm:block">{row.anchor}</span>
+
+      <div className="relative h-5">
+        {/* baseline rail */}
+        <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2" style={{ background: "rgba(255,255,255,0.09)" }} />
+        {/* faint measurement ticks */}
+        {[25, 50, 75, 100].map((t) => (
+          <div
+            key={t}
+            className="absolute top-1/2 h-[5px] w-px -translate-y-1/2"
+            style={{ left: `${t}%`, background: "rgba(255,255,255,0.07)" }}
+          />
+        ))}
+        {hasVal && (
+          <>
+            <motion.div
+              className="absolute left-0 top-1/2 h-px -translate-y-1/2"
+              style={{ background: `linear-gradient(90deg, ${row.color}00, ${row.color})`, boxShadow: `0 0 6px ${row.color}` }}
+              initial={{ width: 0 }}
+              animate={run ? { width: `${pct}%` } : {}}
+              transition={{ duration: 1.4, delay, ease: [0.16, 1, 0.3, 1] }}
+            />
+            <motion.div
+              className="absolute top-1/2 h-[6px] w-[6px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+              style={{ background: row.color, boxShadow: `0 0 10px ${row.color}, 0 0 3px #fff` }}
+              initial={{ left: 0, opacity: 0 }}
+              animate={run ? { left: `${pct}%`, opacity: 1 } : {}}
+              transition={{ duration: 1.4, delay, ease: [0.16, 1, 0.3, 1] }}
+            />
+          </>
+        )}
+      </div>
+
+      <div className="text-right leading-tight">
+        <div
+          className="font-display tabular-nums text-sm sm:text-[15px]"
+          style={{ color: hasVal ? row.color : "rgba(255,255,255,0.4)" }}
+        >
+          {row.display}
         </div>
+        <div className="text-[10px] leading-tight text-white/40">{row.anchor}</div>
       </div>
     </div>
   );
@@ -123,15 +157,15 @@ function CompareBar({
 function BrainCompare({ run }: { run: boolean }) {
   return (
     <div className="rounded-[1.75rem] glass p-7 sm:p-8">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-7 flex flex-wrap items-center justify-between gap-3">
         <h3 className="font-display text-2xl font-light sm:text-3xl">Fly, mouse, human</h3>
         <div className="flex items-center gap-4">
           {[
-            { c: FLY, l: "Fly" },
-            { c: MOUSE, l: "Mouse" },
-            { c: HUMAN, l: "Human" },
+            { c: CMP_FLY, l: "Fly" },
+            { c: CMP_MOUSE, l: "Mouse" },
+            { c: CMP_HUMAN, l: "Human" },
           ].map((x) => (
-            <span key={x.l} className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.16em] text-white/55">
+            <span key={x.l} className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.16em] text-white/60">
               <span className="h-2 w-2 rounded-full" style={{ background: x.c, boxShadow: `0 0 8px ${x.c}` }} />
               {x.l}
             </span>
@@ -140,24 +174,24 @@ function BrainCompare({ run }: { run: boolean }) {
       </div>
 
       {COMPARE.map((m) => {
-        const metricMax = Math.max(...m.rows.map((r) => r.value));
+        const metricMax = Math.max(...m.rows.map((r) => r.value ?? 0));
         return (
-          <div key={m.metric} className="mb-7 last:mb-2">
-            <h4 className="mb-3 font-display text-lg font-light text-white/90">{m.metric}</h4>
-            <div className="grid gap-2.5">
+          <div key={m.metric} className="mb-8 last:mb-2">
+            <h4 className="mb-4 text-[11px] uppercase tracking-[0.28em] text-white/55">{m.metric}</h4>
+            <div className="grid gap-3.5">
               {m.rows.map((r, i) => (
                 <CompareBar key={r.who} row={r} metricMax={metricMax} run={run} delay={0.15 * i} />
               ))}
             </div>
-            <p className="mt-2.5 text-xs leading-relaxed text-white/45">{m.note}</p>
+            <p className="mt-3 text-xs leading-relaxed text-white/40">{m.note}</p>
           </div>
         );
       })}
 
-      <p className="mt-4 border-t border-white/8 pt-4 text-[12px] leading-relaxed text-white/45">
-        The bars sit on a log scale, so the brains look close together. They are not: every step up is a jump of
-        hundreds to thousands of times. The entire fly brain, mapped wire for wire, holds fewer neurons than a
-        grain-of-rice crumb of your cortex, and that crumb-sized brain still flies, learns, and finds a mate.
+      <p className="mt-2 border-t border-white/8 pt-4 text-[12px] leading-relaxed text-white/45">
+        These tracks are drawn to true scale. Beside the human, the fly and even the mouse shrink to specks, and that is
+        the honest shape of it: the entire fly brain, mapped wire for wire, holds fewer neurons than a grain-of-rice
+        crumb of your cortex, and that crumb still flies, learns, and finds a mate.
       </p>
     </div>
   );
@@ -250,11 +284,160 @@ function EarthWrap({ run }: { run: boolean }) {
 
 export default function ScaleTest() {
   const [run, setRun] = useState(false);
+  const [shared, setShared] = useState(false);
 
   useEffect(() => {
     const id = window.setTimeout(() => setRun(true), 250);
     return () => clearTimeout(id);
   }, []);
+
+  // Per-route SEO: this is a client-rendered SPA, so set the head here. Adds
+  // title/description/OG/canonical plus FAQ + LearningResource structured data
+  // (helps this page answer "how many neurons in the human brain" searches).
+  useEffect(() => {
+    const url = "https://whatisabrain.com/museum/stats";
+    const title = "How big is the human brain? Brains by the numbers | What's a brain?";
+    const desc =
+      "How big is the human brain, really? 86 billion neurons, ~100 trillion synapses, and ~2 million km of wiring, shown to scale across fly, mouse, and human, every figure sourced. A free interactive neuroscience resource.";
+    const prevTitle = document.title;
+    document.title = title;
+
+    const created: Element[] = [];
+    const restore: Array<() => void> = [];
+    const upsert = (sel: string, make: () => Element, set: (el: Element) => void) => {
+      let el = document.head.querySelector(sel);
+      if (el) {
+        const content = el.getAttribute("content");
+        const href = el.getAttribute("href");
+        restore.push(() => {
+          if (content != null) el!.setAttribute("content", content);
+          if (href != null) el!.setAttribute("href", href);
+        });
+      } else {
+        el = make();
+        document.head.appendChild(el);
+        created.push(el);
+      }
+      set(el);
+    };
+    const meta = (attr: string, key: string, content: string) =>
+      upsert(
+        `meta[${attr}="${key}"]`,
+        () => {
+          const m = document.createElement("meta");
+          m.setAttribute(attr, key);
+          return m;
+        },
+        (el) => el.setAttribute("content", content),
+      );
+
+    meta("name", "description", desc);
+    meta("property", "og:title", title);
+    meta("property", "og:description", desc);
+    meta("property", "og:url", url);
+    meta("name", "twitter:title", title);
+    meta("name", "twitter:description", desc);
+    upsert(
+      'link[rel="canonical"]',
+      () => {
+        const l = document.createElement("link");
+        l.setAttribute("rel", "canonical");
+        return l;
+      },
+      (el) => el.setAttribute("href", url),
+    );
+
+    const ld = document.createElement("script");
+    ld.type = "application/ld+json";
+    ld.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": ["LearningResource", "Article"],
+          name: "Brains by the numbers",
+          url,
+          description: desc,
+          isAccessibleForFree: true,
+          learningResourceType: "Interactive resource",
+          about: ["Human brain", "Neuron", "Synapse", "Connectome", "Neuroscience"],
+          educationalUse: ["Instruction", "Self-study"],
+          creator: { "@type": "Person", name: "Amy Sterling" },
+        },
+        {
+          "@type": "FAQPage",
+          mainEntity: [
+            {
+              "@type": "Question",
+              name: "How many neurons are in the human brain?",
+              acceptedAnswer: { "@type": "Answer", text: "About 86 billion neurons, give or take a few billion." },
+            },
+            {
+              "@type": "Question",
+              name: "How many synapses are in the human brain?",
+              acceptedAnswer: { "@type": "Answer", text: "Roughly 100 trillion synapses, the connections between neurons." },
+            },
+            {
+              "@type": "Question",
+              name: "How long is all the wiring in the human brain?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "About 2 million kilometers of axons and dendrites laid end to end, enough to wrap around the Earth roughly 50 times.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "How does the human brain compare to a fly or mouse brain?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "A fruit fly brain has about 139,255 neurons and a mouse about 70 million, while a human has about 86 billion, hundreds to hundreds of thousands of times more.",
+              },
+            },
+            {
+              "@type": "Question",
+              name: "What is the human brain made of?",
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: "By dry weight the brain is roughly 60% fat, which insulates axons so signals can travel up to about 120 meters per second.",
+              },
+            },
+          ],
+        },
+      ],
+    });
+    document.head.appendChild(ld);
+    created.push(ld);
+
+    return () => {
+      document.title = prevTitle;
+      created.forEach((n) => n.remove());
+      restore.forEach((fn) => fn());
+    };
+  }, []);
+
+  const handleShare = async () => {
+    const url = "https://whatisabrain.com/museum/stats";
+    const text =
+      "How big is the human brain, really? 86 billion neurons, 100 trillion synapses, 2 million km of wiring, made tangible.";
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: "Brains by the numbers", text, url });
+        return;
+      }
+    } catch {
+      return; // user dismissed the share sheet
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setShared(true);
+      window.setTimeout(() => setShared(false), 1800);
+    } catch {
+      window.open(
+        `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
+        "_blank",
+        "noopener",
+      );
+    }
+  };
 
   return (
     <div
@@ -271,7 +454,7 @@ export default function ScaleTest() {
                 meshUrl={`${import.meta.env.BASE_URL}meshes/human-brain.glb`}
                 extraMeshUrl={`${import.meta.env.BASE_URL}meshes/human-cerebellum.glb`}
                 color={HUMAN}
-                cameraDistance={2.5}
+                cameraDistance={3.2}
                 spinSpeed={0.12}
                 zoom={false}
                 className="absolute inset-0"
@@ -293,18 +476,23 @@ export default function ScaleTest() {
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Link
-                to="/fly"
-                className="rounded-full px-5 py-2.5 text-sm font-medium transition"
-                style={{ background: "rgba(255,200,97,0.14)", border: "1px solid rgba(255,200,97,0.35)", color: "#ffc861" }}
-              >
-                The fly we fully mapped →
-              </Link>
-              <Link
                 to="/citations"
                 className="rounded-full border border-white/15 bg-white/8 px-5 py-2.5 text-sm font-medium text-white/88 transition hover:bg-white/12"
               >
                 Sources and calculations
               </Link>
+              <button
+                onClick={handleShare}
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-5 py-2.5 text-sm font-medium text-white/88 transition hover:bg-white/12"
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="18" cy="5" r="3" />
+                  <circle cx="6" cy="12" r="3" />
+                  <circle cx="18" cy="19" r="3" />
+                  <path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4" />
+                </svg>
+                {shared ? "Link copied" : "Share"}
+              </button>
             </div>
           </div>
         </section>

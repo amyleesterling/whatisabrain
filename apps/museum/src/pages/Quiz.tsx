@@ -52,6 +52,42 @@ const QUESTIONS: Q[] = [
   },
 ];
 
+// Level 2: harder, more specific. Same payoff-is-a-real-fact rule.
+const QUESTIONS_2: Q[] = [
+  {
+    question: "How fast can a signal race down a myelinated axon?",
+    options: ["~3 mph", "~270 mph", "~2,700 mph"],
+    answer: 1,
+    payoff: "About 120 m/s, roughly 270 mph. The fatty myelin sheath is what makes it so fast.",
+  },
+  {
+    question: "How wide is the gap a signal leaps between two neurons?",
+    options: ["20 to 40 nanometers", "20 to 40 micrometers", "20 to 40 millimeters"],
+    answer: 0,
+    payoff: "About 20 to 40 nanometers, thousands of times thinner than a hair. Neurons never actually touch.",
+  },
+  {
+    question: "Mapping the fly brain revealed how many distinct cell types?",
+    options: ["About 840", "About 8,400", "About 84,000"],
+    answer: 1,
+    payoff: "8,453, and more than half of them (4,581) had never been described before.",
+    link: { to: "/fly", label: "See the fly brain" },
+  },
+  {
+    question: "Unfold your cerebral cortex and it is about the size of...",
+    options: ["A postage stamp", "A large pizza box", "A tennis court"],
+    answer: 1,
+    payoff: "About 2.5 square feet. The wrinkles pack that whole sheet into your skull.",
+    link: { to: "/stats", label: "See the numbers" },
+  },
+  {
+    question: "Which animal's brain was the first ever mapped in full, in 1986?",
+    options: ["A fruit fly", "A roundworm", "A mouse"],
+    answer: 1,
+    payoff: "The roundworm C. elegans, all 302 neurons. The adult fly (139,255) came 38 years later.",
+  },
+];
+
 function scoreTitle(score: number, total: number): string {
   const pct = score / total;
   if (pct === 1) return "Big brain energy";
@@ -61,17 +97,19 @@ function scoreTitle(score: number, total: number): string {
 }
 
 export default function Quiz() {
+  const [level, setLevel] = useState(1);
   const [i, setI] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
 
-  const q = QUESTIONS[i];
+  const questions = level === 1 ? QUESTIONS : QUESTIONS_2;
+  const q = questions[i];
   const revealed = picked !== null;
 
   // Share the finished score. Built from state so the number is baked into the text.
   const shareUrl = "https://whatisabrain.com/museum/quiz";
-  const shareText = `I scored ${score}/${QUESTIONS.length} on the "What's a brain?" quiz. How well do you know your own brain?`;
+  const shareText = `I scored ${score}/${questions.length} on the "What's a brain?" quiz${level === 2 ? " (hard mode)" : ""}. How well do you know your own brain?`;
   const shareX = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
   const shareMail = `mailto:?subject=${encodeURIComponent("How well do you know your brain?")}&body=${encodeURIComponent(`${shareText}\n\n${shareUrl}`)}`;
 
@@ -82,7 +120,7 @@ export default function Quiz() {
   }
 
   function next() {
-    if (i + 1 >= QUESTIONS.length) {
+    if (i + 1 >= questions.length) {
       setDone(true);
     } else {
       setI((n) => n + 1);
@@ -90,12 +128,15 @@ export default function Quiz() {
     }
   }
 
-  function restart() {
+  function reset(toLevel: number) {
+    setLevel(toLevel);
     setI(0);
     setPicked(null);
     setScore(0);
     setDone(false);
   }
+  const restart = () => reset(1);
+  const startLevel2 = () => reset(2);
 
   return (
     <div
@@ -119,7 +160,7 @@ export default function Quiz() {
           <>
             {/* Progress */}
             <div className="mb-8 flex items-center gap-2">
-              {QUESTIONS.map((_, n) => (
+              {questions.map((_, n) => (
                 <span
                   key={n}
                   className="h-1.5 flex-1 rounded-full transition-all duration-500"
@@ -129,7 +170,7 @@ export default function Quiz() {
             </div>
 
             <p className="mb-2 text-[11px] uppercase tracking-[0.32em] text-white/45">
-              Question {i + 1} of {QUESTIONS.length}
+              {level === 2 ? "Hard mode · " : ""}Question {i + 1} of {questions.length}
             </p>
             <h1 className="font-display text-[clamp(1.7rem,3.6vw,2.6rem)] font-light leading-tight">
               {q.question}
@@ -194,7 +235,7 @@ export default function Quiz() {
                     className="rounded-full px-6 py-2.5 text-sm font-medium transition"
                     style={{ background: "rgba(183,139,255,0.16)", border: "1px solid rgba(183,139,255,0.4)", color: HUMAN }}
                   >
-                    {i + 1 >= QUESTIONS.length ? "See your score" : "Next question →"}
+                    {i + 1 >= questions.length ? "See your score" : "Next question →"}
                   </button>
                 </div>
               </div>
@@ -203,14 +244,30 @@ export default function Quiz() {
         ) : (
           /* Score screen */
           <div className="text-center">
-            <p className="mb-3 text-[11px] uppercase tracking-[0.32em] text-white/45">Your score</p>
+            <p className="mb-3 text-[11px] uppercase tracking-[0.32em] text-white/45">
+              {level === 2 ? "Hard mode score" : "Your score"}
+            </p>
             <p className="font-display font-light leading-none" style={{ color: HUMAN, fontSize: "clamp(3.5rem,12vw,7rem)" }}>
-              {score}<span className="text-white/30">/{QUESTIONS.length}</span>
+              {score}<span className="text-white/30">/{questions.length}</span>
             </p>
-            <h1 className="mt-4 font-display text-[clamp(1.8rem,4vw,3rem)] font-light">{scoreTitle(score, QUESTIONS.length)}</h1>
+            <h1 className="mt-4 font-display text-[clamp(1.8rem,4vw,3rem)] font-light">{scoreTitle(score, questions.length)}</h1>
             <p className="mx-auto mt-4 max-w-md leading-relaxed text-white/65">
-              Every answer here is a real number from the brain. There is a lot more where these came from.
+              {level === 1
+                ? "Every answer here is a real number from the brain. Think you can take on a harder round?"
+                : "Every answer here is a real number from the brain. You took on the hard round, respect."}
             </p>
+
+            {level === 1 && (
+              <div className="mt-6">
+                <button
+                  onClick={startLevel2}
+                  className="rounded-full px-6 py-3 text-sm font-semibold transition"
+                  style={{ background: "rgba(255,200,97,0.16)", border: "1px solid rgba(255,200,97,0.45)", color: FLY }}
+                >
+                  Level 2: harder questions →
+                </button>
+              </div>
+            )}
 
             {/* Share */}
             <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
