@@ -82,9 +82,44 @@ const QUESTIONS_2: Q[] = [
   },
   {
     question: "Which animal's brain was the first ever mapped in full, in 1986?",
-    options: ["A fruit fly", "A roundworm", "A mouse"],
+    options: ["A fruit fly", "C. elegans", "A mouse"],
     answer: 1,
     payoff: "The roundworm C. elegans, all 302 neurons. The adult fly (139,255) came 38 years later.",
+  },
+];
+
+// Level 3: expert. Real neuroscience, not just big numbers.
+const QUESTIONS_3: Q[] = [
+  {
+    question: "The whole human brain runs on about how much power?",
+    options: ["~2 watts", "~20 watts", "~200 watts"],
+    answer: 1,
+    payoff: "About 20 watts, less than a dim lightbulb, yet it outthinks any computer at what it does.",
+  },
+  {
+    question: "What is the resting voltage across a neuron's membrane?",
+    options: ["About -70 millivolts", "About -70 volts", "About +70 millivolts"],
+    answer: 0,
+    payoff: "About -70 millivolts. An action potential briefly flips it positive, then it snaps back.",
+  },
+  {
+    question: "Which ion flooding INTO the cell starts an action potential?",
+    options: ["Potassium (K+)", "Sodium (Na+)", "Chloride (Cl-)"],
+    answer: 1,
+    payoff: "Sodium (Na+) rushes in to fire the spike; potassium (K+) then flows out to reset the cell.",
+  },
+  {
+    question: "A single human cortical neuron can form up to about how many synapses?",
+    options: ["~100", "~1,000", "~10,000"],
+    answer: 2,
+    payoff: "Up to roughly 10,000. Multiply by 86 billion neurons and you reach ~100 trillion synapses.",
+  },
+  {
+    question: "MICrONS mapped one cubic millimeter of mouse cortex. How many synapses were inside?",
+    options: ["~5 million", "~50 million", "~500 million"],
+    answer: 2,
+    payoff: "About 523 million synapses, wiring together roughly 200,000 cells, in a speck the size of a grain of sand.",
+    link: { to: "/stats", label: "See the numbers" },
   },
 ];
 
@@ -103,13 +138,14 @@ export default function Quiz() {
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
 
-  const questions = level === 1 ? QUESTIONS : QUESTIONS_2;
+  const questions = level === 1 ? QUESTIONS : level === 2 ? QUESTIONS_2 : QUESTIONS_3;
+  const levelName = level === 2 ? "Hard mode" : level === 3 ? "Expert mode" : "";
   const q = questions[i];
   const revealed = picked !== null;
 
   // Share the finished score. Built from state so the number is baked into the text.
   const shareUrl = "https://whatisabrain.com/museum/quiz";
-  const shareText = `I scored ${score}/${questions.length} on the "What's a brain?" quiz${level === 2 ? " (hard mode)" : ""}. How well do you know your own brain?`;
+  const shareText = `I scored ${score}/${questions.length} on the "What's a brain?" quiz${levelName ? ` (${levelName.toLowerCase()})` : ""}. How well do you know your own brain?`;
   const shareX = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
   const shareMail = `mailto:?subject=${encodeURIComponent("How well do you know your brain?")}&body=${encodeURIComponent(`${shareText}\n\n${shareUrl}`)}`;
 
@@ -136,7 +172,6 @@ export default function Quiz() {
     setDone(false);
   }
   const restart = () => reset(1);
-  const startLevel2 = () => reset(2);
 
   return (
     <div
@@ -170,7 +205,7 @@ export default function Quiz() {
             </div>
 
             <p className="mb-2 text-[11px] uppercase tracking-[0.32em] text-white/45">
-              {level === 2 ? "Hard mode · " : ""}Question {i + 1} of {questions.length}
+              {levelName ? `${levelName} · ` : ""}Question {i + 1} of {questions.length}
             </p>
             <h1 className="font-display text-[clamp(1.7rem,3.6vw,2.6rem)] font-light leading-tight">
               {q.question}
@@ -245,7 +280,7 @@ export default function Quiz() {
           /* Score screen */
           <div className="text-center">
             <p className="mb-3 text-[11px] uppercase tracking-[0.32em] text-white/45">
-              {level === 2 ? "Hard mode score" : "Your score"}
+              {levelName ? `${levelName} score` : "Your score"}
             </p>
             <p className="font-display font-light leading-none" style={{ color: HUMAN, fontSize: "clamp(3.5rem,12vw,7rem)" }}>
               {score}<span className="text-white/30">/{questions.length}</span>
@@ -254,17 +289,19 @@ export default function Quiz() {
             <p className="mx-auto mt-4 max-w-md leading-relaxed text-white/65">
               {level === 1
                 ? "Every answer here is a real number from the brain. Think you can take on a harder round?"
-                : "Every answer here is a real number from the brain. You took on the hard round, respect."}
+                : level === 2
+                ? "Nicely done. One more round, and this one is expert level. Still game?"
+                : "Every answer here is a real number from the brain. You cleared all three rounds, hero."}
             </p>
 
-            {level === 1 && (
+            {level < 3 && (
               <div className="mt-6">
                 <button
-                  onClick={startLevel2}
+                  onClick={() => reset(level + 1)}
                   className="rounded-full px-6 py-3 text-sm font-semibold transition"
                   style={{ background: "rgba(255,200,97,0.16)", border: "1px solid rgba(255,200,97,0.45)", color: FLY }}
                 >
-                  Level 2: harder questions →
+                  {level === 1 ? "Level 2: harder questions →" : "Level 3: expert mode →"}
                 </button>
               </div>
             )}
