@@ -5,6 +5,7 @@
 export const LANGS = [
   { code: "en", native: "English" },
   { code: "zh", native: "中文" },
+  { code: "ko", native: "한국어" },
   { code: "pt", native: "Português" },
 ] as const;
 

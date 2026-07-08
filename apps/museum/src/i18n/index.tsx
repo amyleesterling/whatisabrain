@@ -1,10 +1,11 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { en, type StringKey } from "./en";
 import { zh } from "./zh";
+import { ko } from "./ko";
 import { pt } from "./pt";
 import { LANGS, LANG_CODES, type Lang } from "./langs";
 
-const DICTS: Record<Lang, Partial<Record<StringKey, string>>> = { en, zh, pt };
+const DICTS: Record<Lang, Partial<Record<StringKey, string>>> = { en, zh, ko, pt };
 const STORAGE_KEY = "wab-lang";
 
 function isLang(x: string | null | undefined): x is Lang {
