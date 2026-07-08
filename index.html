@@ -339,12 +339,18 @@
     .signup-card {
       border-radius: 1.5rem; padding: 1.9rem 1.75rem;
       display: flex; flex-direction: column; gap: 1.15rem; align-items: center; text-align: center;
+      /* Solid, dark backdrop so the copy stays readable over the neuron field. */
+      background: rgba(7, 11, 20, 0.9);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(26px) saturate(140%);
+      -webkit-backdrop-filter: blur(26px) saturate(140%);
+      box-shadow: 0 24px 70px -34px rgba(0,0,0,0.85);
     }
     @media (min-width: 720px) {
       .signup-card { flex-direction: row; justify-content: space-between; text-align: left; gap: 2rem; padding: 1.9rem 2.5rem; }
     }
     .signup-copy h2 { font-family: var(--font-display); font-weight: 300; font-size: clamp(1.3rem, 2.4vw, 1.9rem); line-height: 1.15; }
-    .signup-copy p { margin-top: 0.5rem; color: rgba(255,255,255,0.6); font-weight: 300; font-size: 0.92rem; line-height: 1.55; max-width: 32rem; }
+    .signup-copy p { margin-top: 0.5rem; color: rgba(255,255,255,0.74); font-weight: 300; font-size: 0.92rem; line-height: 1.55; max-width: 32rem; }
     #signup-form { display: flex; gap: 0.6rem; width: 100%; max-width: 27rem; flex-wrap: wrap; }
     #signup-email {
       flex: 1 1 12rem; min-width: 0; padding: 0.8rem 1rem; border-radius: 999px;
@@ -755,7 +761,7 @@
        apps-script/subscribe.gs for the one-time setup). -->
   <script>
     (function () {
-      var SUBSCRIBE_URL = "PASTE_APPS_SCRIPT_WEB_APP_URL";
+      var SUBSCRIBE_URL = "https://script.google.com/macros/s/AKfycbyEEtB0UVQ8cvDeWKiWxXFFBySD0zeaxmoLdUluoehG3z1Pa6tX4b9LejVH2MMXyFcw/exec";
       var form = document.getElementById("signup-form");
       if (!form) return;
       var msg = document.querySelector(".signup-msg");
